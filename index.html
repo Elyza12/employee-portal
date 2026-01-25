@@ -139,8 +139,9 @@ document.addEventListener("DOMContentLoaded", function(){
                 document.getElementById('adminView').style.display = 'block';
                 renderAdminLeaves();
             }else{
-                document.getbyElementById('employeeView').style.display = 'block';
-                loadIR(user);
+             document.getElementById('employeeView').style.display = 'block';
+            loadIR(user);
+            }
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
         }
