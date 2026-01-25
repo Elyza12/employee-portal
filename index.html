@@ -131,15 +131,16 @@ document.addEventListener("DOMContentLoaded", function(){
             document.getElementById('portal').style.display='block';
             document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase() + user.slice(1);
 
-            if(employees[user].isAdmin){
-                document.getElementById('adminView').style.display = 'block';
-                document.getElementById('employeeView').style.display = 'none';
+            // Always hide both first
+            document.getElementById('employeeView').style.display = 'none';
+            documnet.getElementById('adminView').style.display = 'none';
+
+            if(employees[user].isAdmin{
+                document.getElementbyId('adminView').style.display = 'block';
                 renderAdminLeaves();
-            } else {
-                document.getElementById('adminView').style.display = 'none';
-                document.getElementById('employeeView').style.display = 'block';
+            }else{
+                document.getbyElementById('employeView').style.display = 'block';
                 loadIR(user);
-            }
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
         }
@@ -218,4 +219,5 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 </body>
 </html>
+
 
