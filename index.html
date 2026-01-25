@@ -12,16 +12,28 @@
     th,td { border:1px solid #ddd; padding:10px; text-align:left; }
     th { background:#0077cc; color:white; }
     td { background:#f9f9f9; }
-    input, textarea { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
+    input { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
     button { background:#0077cc; color:white; border:none; padding:12px; cursor:pointer; width:100%; margin-top:10px; border-radius:5px; font-size:16px; }
     button:hover { background:#005fa3; }
+
     img.schedule { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8px; margin-top:10px; }
+
+    @media(max-width:600px){
+        table,thead,tbody,th,td,tr{display:block;}
+        th{display:none;}
+        tr{margin-bottom:15px;border-bottom:2px solid #ddd;}
+        td{border:none;position:relative;padding-left:50%;}
+        td::before{position:absolute;left:10px;top:10px;width:45%;font-weight:bold;}
+        td:nth-of-type(1)::before{content:"Date";}
+        td:nth-of-type(2)::before{content:"Incident";}
+        td:nth-of-type(3)::before{content:"Status";}
+        td:nth-of-type(4)::before{content:"Note";}
+    }
 </style>
 </head>
 <body>
-<header>Awi Employee Portal</header>
+<header>Employee Portal</header>
 
-<!-- Login Section -->
 <section id="login">
     <h2>Login</h2>
     <form id="loginForm">
@@ -32,10 +44,9 @@
     <p id="loginMessage" style="color:red;"></p>
 </section>
 
-<!-- Employee Portal -->
 <section id="portal">
     <h2>Welcome, <span id="employeeName"></span></h2>
-
+    
     <h3>Work Schedule</h3>
     <img src="schedule.png" alt="Schedule" class="schedule">
 
@@ -45,43 +56,45 @@
             <th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
         </tr>
     </table>
-    <p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
+	<p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
 
     <h3>Leave Request</h3>
-    <input type="text" id="leaveDate" placeholder="Leave Date(s) e.g., Jan 26-28, 2026">
-    <textarea id="leaveReason" placeholder="Reason for Leave"></textarea>
-    <button onclick="submitLeave()">Submit Leave</button>
-
-    <h4>Your Leave Requests</h4>
-    <table id="leaveTable">
-        <tr><th>Date(s)</th><th>Reason</th><th>Status</th></tr>
-    </table>
+    <input type="date" id="leaveDate">
+    <input type="text" id="leaveReason" placeholder="Reason">
+    <button onclick="fileLeave()">File Leave</button>
 
     <input type="password" id="newPassword" placeholder="New Password">
     <button onclick="changePassword()">Update Password</button>
-    <button style="margin-top:20px;" onclick="logout()">Logout</button>
-</section>
 
-<!-- Admin Portal -->
-<section id="adminPortal">
-    <h2>Admin Panel - Leave Requests</h2>
-    <table id="adminLeaveTable">
-        <tr><th>Employee</th><th>Date(s)</th><th>Reason</th><th>Status</th><th>Action</th></tr>
-    </table>
-    <button onclick="logout()">Logout</button>
+    <button style="margin-top:20px;" onclick="logout()">Logout</button>
 </section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-
-    // Employee data
+    // Employee data including admin
     const employees = {
-        'eliza': { password:'1234', irs:[], leaves:[] },
-        'rachelle': { password:'1234', irs:[], leaves:[] },
-        'admin': { password:'1234', irs:[], leaves:[] } // Admin account
+        'admin': { password: '1234', irs: [], isAdmin: true },
+        'eliza': { password:'1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
+        'rachelle': { password:'1234', irs:[] },
+        'ramy': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'penales': { password:'1234', irs:[] },
+        'joshua': { password:'1234', irs:[] },
+        'ramos': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jules': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'rulona': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'dave': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jm': { password:'1234', irs:[{date:'DECEMBER 12, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'allan': { password:'1234', irs:[{date:'JANUARY 1, 2026', incident:'Tardiness', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'michael': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}, {date:'DECEMBER 2-4, 2025', incident:'', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'mark': { password:'1234', irs:[{date:'JANUARY 1, 2026', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'rico': { password:'1234', irs:[] },
+        'sitoy': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'valerie': { password:'1234', irs:[{date:'NOVEMBER 20, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}, {date:'JANUARY 26-29, 2026', incident:'', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'khevin': { password:'1234', irs:[{date:'NOVEMBER 29, 2025', incident:'', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'cm': { password:'1234', irs:[] }
     };
 
-    let currentUser = '';
+    const leaveRequests = []; // store leave requests
 
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', function(e){
@@ -90,103 +103,61 @@ document.addEventListener("DOMContentLoaded", function(){
         const pass = document.getElementById('password').value;
 
         if(employees[user] && employees[user].password===pass){
-            currentUser = user;
             document.getElementById('login').style.display='none';
-            if(user==='admin'){
-                document.getElementById('adminPortal').style.display='block';
-                loadAdminLeaves();
-            } else {
-                document.getElementById('portal').style.display='block';
-                document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase()+user.slice(1);
-                loadLeaves();
-            }
+            document.getElementById('portal').style.display='block';
+            document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase()+user.slice(1);
+            loadIR(user);
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
         }
     });
 
-    // Logout
+    function loadIR(user){
+        const table = document.getElementById('irTable');
+        table.innerHTML = '<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>';
+        employees[user].irs.forEach(ir=>{
+            const row = table.insertRow();
+            row.insertCell(0).innerText = ir.date;
+            row.insertCell(1).innerText = ir.incident;
+            row.insertCell(2).innerText = ir.status;
+            row.insertCell(3).innerText = ir.note;
+        });
+    }
+
     window.logout = function(){
-        currentUser='';
         document.getElementById('portal').style.display='none';
-        document.getElementById('adminPortal').style.display='none';
         document.getElementById('login').style.display='block';
         document.getElementById('username').value='';
         document.getElementById('password').value='';
         document.getElementById('loginMessage').innerText='';
     }
 
-    // Change Password
     window.changePassword = function(){
         const newPass = document.getElementById('newPassword').value;
-        if(!newPass){
-            alert('Enter a new password');
-            return;
-        }
-        if(newPass===employees[currentUser].password){
-            alert('New password must be different from the old one');
-            return;
-        }
-        employees[currentUser].password = newPass;
+        const user = document.getElementById('employeeName').innerText.toLowerCase();
+
+        if (!newPass) { alert('Enter a new password'); return; }
+        if (newPass === employees[user].password){ alert('New password must be different'); return; }
+
+        employees[user].password = newPass;
         alert('Password updated successfully!');
-        document.getElementById('newPassword').value='';
+        document.getElementById('newPassword').value = '';
     }
 
-    // Submit Leave
-    window.submitLeave = function(){
-        const date = document.getElementById('leaveDate').value.trim();
-        const reason = document.getElementById('leaveReason').value.trim();
-        if(!date || !reason){
-            alert('Enter leave date and reason');
-            return;
-        }
-        employees[currentUser].leaves.push({ date, reason, status:'Pending' });
-        document.getElementById('leaveDate').value='';
-        document.getElementById('leaveReason').value='';
-        loadLeaves();
-        loadAdminLeaves();
-        alert('Leave submitted successfully!');
+    window.fileLeave = function(){
+        const user = document.getElementById('employeeName').innerText.toLowerCase();
+        const date = document.getElementById('leaveDate').value;
+        const reason = document.getElementById('leaveReason').value;
+        if(!date || !reason){ alert('Fill both date and reason'); return; }
+
+        leaveRequests.push({user, date, reason});
+        alert('Leave request filed successfully! Admin can view it.');
+        document.getElementById('leaveDate').value = '';
+        document.getElementById('leaveReason').value = '';
+        console.log('Leave Requests:', leaveRequests);
     }
 
-    // Load employee leave table
-    function loadLeaves(){
-        const table = document.getElementById('leaveTable');
-        table.innerHTML = '<tr><th>Date(s)</th><th>Reason</th><th>Status</th></tr>';
-        employees[currentUser].leaves.forEach(l=>{
-            const row = table.insertRow();
-            row.insertCell(0).innerText = l.date;
-            row.insertCell(1).innerText = l.reason;
-            row.insertCell(2).innerText = l.status;
-        });
-    }
-
-    // Admin view
-    function loadAdminLeaves(){
-        const table = document.getElementById('adminLeaveTable');
-        table.innerHTML = '<tr><th>Employee</th><th>Date(s)</th><th>Reason</th><th>Status</th><th>Action</th></tr>';
-        for(const emp in employees){
-            if(emp==='admin') continue;
-            employees[emp].leaves.forEach((l, i)=>{
-                const row = table.insertRow();
-                row.insertCell(0).innerText = emp.charAt(0).toUpperCase()+emp.slice(1);
-                row.insertCell(1).innerText = l.date;
-                row.insertCell(2).innerText = l.reason;
-                row.insertCell(3).innerText = l.status;
-                const actionCell = row.insertCell(4);
-                const approveBtn = document.createElement('button');
-                approveBtn.innerText = 'Approve';
-                approveBtn.onclick = () => { l.status='Approved'; loadLeaves(); loadAdminLeaves(); };
-                const rejectBtn = document.createElement('button');
-                rejectBtn.innerText = 'Reject';
-                rejectBtn.style.background='#cc0000';
-                rejectBtn.onclick = () => { l.status='Rejected'; loadLeaves(); loadAdminLeaves(); };
-                actionCell.appendChild(approveBtn);
-                actionCell.appendChild(rejectBtn);
-            });
-        }
-    }
-
-    document.getElementById('login').style.display='block';
+    document.getElementById('login').style.display = 'block';
 });
 </script>
 </body>
