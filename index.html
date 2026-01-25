@@ -160,18 +160,24 @@ document.addEventListener("DOMContentLoaded", function(){
     window.changePassword = function(){
         const newPass = document.getElementById('newPassword').value;
         const user = document.getElementById('employeeName').innerText.toLowerCase();
-        if(newPass){
-            employees[user].password = newPass;
-            alert('Password updated successfully!');
-            document.getElementById('newPassword').value='';
-        } else alert('Enter a new password');
+        if (!newPass) {
+			alert('Enter a new password');
+			return;
     }
+		if (newPass === employees[user].password){
+			alert('New password must be different from the old one');
+			return;
+		}
+
+		employees[user].password = newPass;
+		alert('Password updated succesfully');
 
     document.getElementById('login').style.display='block';
 });
 </script>
 </body>
 </html>
+
 
 
 
