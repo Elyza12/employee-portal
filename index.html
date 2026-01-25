@@ -5,22 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Awi Employee Portal</title>
 <style>
-    #employeeView { display: none; }
+    body { font-family: Arial,sans-serif; background:#f4f4f4; margin:0; padding:0; }
+    header { background:#0077cc; color:white; padding:20px; text-align:center; }
+    section { display:none; padding:20px; max-width:900px; margin:20px auto; background:white; border-radius:8px; box-shadow:0 0 10px #ccc; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th,td { border:1px solid #ddd; padding:10px; text-align:left; }
+    th { background:#0077cc; color:white; }
+    td { background:#f9f9f9; }
+    input { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
+    button { background:#0077cc; color:white; border:none; padding:12px; cursor:pointer; width:100%; margin-top:10px; border-radius:5px; font-size:16px; }
+    button:hover { background:#005fa3; }
 
-    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-    header { background: #0077cc; color: white; padding: 20px; text-align: center; }
-    section { display: none; padding: 20px; max-width: 900px; margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #0077cc; color: white; }
-    td { background: #f9f9f9; }
-    input, button { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; }
-    button { background: #0077cc; color: white; border: none; cursor: pointer; margin-top: 10px; border-radius: 5px; font-size: 16px; }
-    button:hover { background: #005fa3; }
-    img.schedule { width: 100%; max-width: 1000px; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px; }
+    img.schedule { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8px; margin-top:10px; }
 
     @media(max-width:600px){
-        table, thead, tbody, th, td, tr{display:block;}
+        table,thead,tbody,th,td,tr{display:block;}
         th{display:none;}
         tr{margin-bottom:15px;border-bottom:2px solid #ddd;}
         td{border:none;position:relative;padding-left:50%;}
@@ -35,7 +34,6 @@
 <body>
 <header>Employee Portal</header>
 
-<!-- Login Section -->
 <section id="login">
     <h2>Login</h2>
     <form id="loginForm">
@@ -46,42 +44,57 @@
     <p id="loginMessage" style="color:red;"></p>
 </section>
 
-<!-- Employee Portal -->
 <section id="portal">
     <h2>Welcome, <span id="employeeName"></span></h2>
     
-    <!-- Employee View -->
-    <div id="employeeView">
-        <h3>Work Schedule</h3>
-        <img src="schedule.png" alt="Schedule" class="schedule">
+    <h3>Work Schedule</h3>
+    <img src="schedule.png" alt="Schedule" class="schedule">
 
-        <h3>Incident Reports</h3>
-        <table id="irTable">
-            <tr>
-                <th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
-            </tr>
-        </table>
-        
-            <p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
-        
-        <input type="password" id="newPassword" placeholder="New Password">
-        <button onclick="changePassword()">Update Password</button>
-    </div>
+    <h3>Incident Reports</h3>
+    <table id="irTable">
+        <tr>
+            <th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
+        </tr>
+    </table>
+	<p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
+
+    <h3>Leave Request</h3>
+    <input type="date" id="leaveDate">
+    <input type="text" id="leaveReason" placeholder="Reason">
+    <button onclick="fileLeave()">File Leave</button>
+
+    <input type="password" id="newPassword" placeholder="New Password">
+    <button onclick="changePassword()">Update Password</button>
 
     <button style="margin-top:20px;" onclick="logout()">Logout</button>
 </section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
+    // Employee data including admin
     const employees = {
+        'admin': { password: '1234', irs: [], isAdmin: true },
         'eliza': { password:'1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
         'rachelle': { password:'1234', irs:[] },
-        'ramy': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}] },
+        'ramy': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
         'penales': { password:'1234', irs:[] },
         'joshua': { password:'1234', irs:[] },
-        'ramos': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}] }
-        // add more employees as needed
+        'ramos': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jules': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'rulona': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'dave': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jm': { password:'1234', irs:[{date:'DECEMBER 12, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'allan': { password:'1234', irs:[{date:'JANUARY 1, 2026', incident:'Tardiness', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'michael': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}, {date:'DECEMBER 2-4, 2025', incident:'', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'mark': { password:'1234', irs:[{date:'JANUARY 1, 2026', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'rico': { password:'1234', irs:[] },
+        'sitoy': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'valerie': { password:'1234', irs:[{date:'NOVEMBER 20, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}, {date:'JANUARY 26-29, 2026', incident:'', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'khevin': { password:'1234', irs:[{date:'NOVEMBER 29, 2025', incident:'', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'cm': { password:'1234', irs:[] }
     };
+
+    const leaveRequests = []; // store leave requests
 
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', function(e){
@@ -89,13 +102,10 @@ document.addEventListener("DOMContentLoaded", function(){
         const user = document.getElementById('username').value.trim().toLowerCase();
         const pass = document.getElementById('password').value;
 
-        if(employees[user] && employees[user].password === pass){
+        if(employees[user] && employees[user].password===pass){
             document.getElementById('login').style.display='none';
             document.getElementById('portal').style.display='block';
-            document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase() + user.slice(1);
-
-            // show employee view
-            document.getElementById('employeeView').style.display = 'block';
+            document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase()+user.slice(1);
             loadIR(user);
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
@@ -126,23 +136,18 @@ document.addEventListener("DOMContentLoaded", function(){
         const newPass = document.getElementById('newPassword').value;
         const user = document.getElementById('employeeName').innerText.toLowerCase();
 
-        if(!newPass){
-            alert('Enter a new password');
-            return;
-        }
-        if(newPass === employees[user].password){
-            alert('New password must be different from the old one');
-            return;
-        }
+        if (!newPass) { alert('Enter a new password'); return; }
+        if (newPass === employees[user].password){ alert('New password must be different'); return; }
+
         employees[user].password = newPass;
         alert('Password updated successfully!');
-        document.getElementById('newPassword').value='';
+        document.getElementById('newPassword').value = '';
     }
 
-    document.getElementById('login').style.display='block';
+    }
+
+    document.getElementById('login').style.display = 'block';
 });
 </script>
 </body>
 </html>
-
-
