@@ -12,7 +12,7 @@
     th,td { border:1px solid #ddd; padding:10px; text-align:left; }
     th { background:#0077cc; color:white; }
     td { background:#f9f9f9; }
-    input { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
+    input, select { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
     button { background:#0077cc; color:white; border:none; padding:12px; cursor:pointer; width:100%; margin-top:10px; border-radius:5px; font-size:16px; }
     button:hover { background:#005fa3; }
 
@@ -34,6 +34,7 @@
 <body>
 <header>Employee Portal</header>
 
+<!-- Login Section -->
 <section id="login">
     <h2>Login</h2>
     <form id="loginForm">
@@ -44,43 +45,66 @@
     <p id="loginMessage" style="color:red;"></p>
 </section>
 
+<!-- Employee Portal -->
 <section id="portal">
     <h2>Welcome, <span id="employeeName"></span></h2>
     
-    <h3>Work Schedule</h3>
-    <img src="schedule.png" alt="Schedule" class="schedule">
+    <!-- Employee View -->
+    <div id="employeeView">
+        <h3>Work Schedule</h3>
+        <img src="schedule.png" alt="Schedule" class="schedule">
 
-    <h3>Incident Reports</h3>
-    <table id="irTable">
-        <tr>
-            <th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
-        </tr>
-    </table>
-	<p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
+        <h3>Incident Reports</h3>
+        <table id="irTable">
+            <tr>
+                <th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
+            </tr>
+        </table>
+        <p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
 
-    <h3>Leave Request</h3>
-    <input type="date" id="leaveDate">
-    <input type="text" id="leaveReason" placeholder="Reason">
-    <button onclick="fileLeave()">File Leave</button>
+        <h3>Leave Request</h3>
+        <form id="leaveForm">
+            <input type="date" id="leaveDate" required>
+            <select id="leaveType" required>
+                <option value="">Select Leave Type</option>
+                <option value="Vacation">Vacation</option>
+                <option value="Sick">Sick</option>
+                <option value="Emergency">Emergency</option>
+            </select>
+            <input type="text" id="leaveReason" placeholder="Reason" required>
+            <button type="button" onclick="submitLeave()">Submit Leave</button>
+        </form>
 
-    <input type="password" id="newPassword" placeholder="New Password">
-    <button onclick="changePassword()">Update Password</button>
+        <input type="password" id="newPassword" placeholder="New Password">
+        <button onclick="changePassword()">Update Password</button>
+    </div>
+
+    <!-- Admin View -->
+    <div id="adminView">
+        <h3>All Leave Requests</h3>
+        <table id="adminLeaveTable">
+            <tr>
+                <th>Employee</th><th>Date</th><th>Type</th><th>Reason</th>
+            </tr>
+        </table>
+    </div>
 
     <button style="margin-top:20px;" onclick="logout()">Logout</button>
 </section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-    // Employee data including admin
+    const leaveRequests = [];
+
     const employees = {
-        'admin': { password: '1234', isAdmin: true },
+        'admin': { password:'1234', isAdmin:true, irs:[] },
         'eliza': { password:'1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
         'rachelle': { password:'1234', irs:[] },
         'ramy': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
         'penales': { password:'1234', irs:[] },
         'joshua': { password:'1234', irs:[] },
-        'ramos': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
-        'jules': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'ramos': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jules': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
         'rulona': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
         'dave': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
         'jm': { password:'1234', irs:[{date:'DECEMBER 12, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
@@ -94,19 +118,26 @@ document.addEventListener("DOMContentLoaded", function(){
         'cm': { password:'1234', irs:[] }
     };
 
-    const leaveRequests = []; // store leave requests
-
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', function(e){
         e.preventDefault();
         const user = document.getElementById('username').value.trim().toLowerCase();
         const pass = document.getElementById('password').value;
 
-        if(employees[user] && employees[user].password===pass){
+        if(employees[user] && employees[user].password === pass){
             document.getElementById('login').style.display='none';
             document.getElementById('portal').style.display='block';
-            document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase()+user.slice(1);
-            loadIR(user);
+            document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase() + user.slice(1);
+
+            if(employees[user].isAdmin){
+                document.getElementById('adminView').style.display = 'block';
+                document.getElementById('employeeView').style.display = 'none';
+                renderAdminLeaves();
+            } else {
+                document.getElementById('adminView').style.display = 'none';
+                document.getElementById('employeeView').style.display = 'block';
+                loadIR(user);
+            }
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
         }
@@ -136,30 +167,52 @@ document.addEventListener("DOMContentLoaded", function(){
         const newPass = document.getElementById('newPassword').value;
         const user = document.getElementById('employeeName').innerText.toLowerCase();
 
-        if (!newPass) { alert('Enter a new password'); return; }
-        if (newPass === employees[user].password){ alert('New password must be different'); return; }
-
+        if(!newPass){
+            alert('Enter a new password');
+            return;
+        }
+        if(newPass === employees[user].password){
+            alert('New password must be different from the old one');
+            return;
+        }
         employees[user].password = newPass;
         alert('Password updated successfully!');
-        document.getElementById('newPassword').value = '';
+        document.getElementById('newPassword').value='';
     }
 
-    window.fileLeave = function(){
+    window.submitLeave = function(){
         const user = document.getElementById('employeeName').innerText.toLowerCase();
         const date = document.getElementById('leaveDate').value;
+        const type = document.getElementById('leaveType').value;
         const reason = document.getElementById('leaveReason').value;
-        if(!date || !reason){ alert('Fill both date and reason'); return; }
 
-        leaveRequests.push({user, date, reason});
-        alert('Leave request filed successfully! Admin can view it.');
-        document.getElementById('leaveDate').value = '';
-        document.getElementById('leaveReason').value = '';
-        console.log('Leave Requests:', leaveRequests);
+        if(!date || !type || !reason){
+            alert('Please fill all leave details');
+            return;
+        }
+
+        leaveRequests.push({ employee: user, date, type, reason });
+        alert('Leave request submitted!');
+        document.getElementById('leaveDate').value='';
+        document.getElementById('leaveType').value='';
+        document.getElementById('leaveReason').value='';
+        renderAdminLeaves();
     }
 
-    document.getElementById('login').style.display = 'block';
+    function renderAdminLeaves(){
+        const table = document.getElementById('adminLeaveTable');
+        table.innerHTML = '<tr><th>Employee</th><th>Date</th><th>Type</th><th>Reason</th></tr>';
+        leaveRequests.forEach(lr=>{
+            const row = table.insertRow();
+            row.insertCell(0).innerText = lr.employee.charAt(0).toUpperCase() + lr.employee.slice(1);
+            row.insertCell(1).innerText = lr.date;
+            row.insertCell(2).innerText = lr.type;
+            row.insertCell(3).innerText = lr.reason;
+        });
+    }
+
+    document.getElementById('login').style.display='block';
 });
 </script>
 </body>
 </html>
-
