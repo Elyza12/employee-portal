@@ -133,13 +133,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
             // Always hide both first
             document.getElementById('employeeView').style.display = 'none';
-            documnet.getElementById('adminView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'none';
 
-            if(employees[user].isAdmin{
-                document.getElementbyId('adminView').style.display = 'block';
+            if(employees[user].isAdmin){
+                document.getElementById('adminView').style.display = 'block';
                 renderAdminLeaves();
             }else{
-                document.getbyElementById('employeView').style.display = 'block';
+                document.getbyElementById('employeeView').style.display = 'block';
                 loadIR(user);
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
@@ -219,5 +219,6 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 </body>
 </html>
+
 
 
