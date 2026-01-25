@@ -115,7 +115,11 @@ document.addEventListener("DOMContentLoaded", function(){
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', function(e){
         e.preventDefault();
-        const user = document.getElementById('username').value.toLowerCase();
+        const user = document
+ 		 .getElementById('username')
+          .value
+ 	      .trim()
+		  .toLowerCase();
         const pass = document.getElementById('password').value;
 
         if(employees[user] && employees[user].password===pass){
@@ -163,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 </body>
 </html>
+
 
 
 
