@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Employee Portal</title>
+<title>Awi Employee Portal</title>
 <style>
     body { font-family: Arial,sans-serif; background:#f4f4f4; margin:0; padding:0; }
     header { background:#0077cc; color:white; padding:20px; text-align:center; }
@@ -28,6 +28,7 @@
         td:nth-of-type(2)::before{content:"Incident";}
         td:nth-of-type(3)::before{content:"Status";}
         td:nth-of-type(4)::before{content:"Note";}
+        td:nth-of-type(5)::before{content:"Reason";}
     }
 </style>
 </head>
@@ -58,7 +59,20 @@
     </table>
 	<p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
 
-   
+    <h3>Leave Request</h3>
+    <form id="leaveForm">
+        <label for="leaveDate">Date of Leave:</label>
+        <input type="date" id="leaveDate" required>
+        <label for="leaveReason">Reason:</label>
+        <input type="text" id="leaveReason" placeholder="Reason for leave" required>
+        <button type="submit">Submit Leave</button>
+    </form>
+    <p id="leaveMessage" style="color:green;"></p>
+
+    <table id="leaveTable">
+        <tr><th>Date</th><th>Reason</th><th>Status</th></tr>
+    </table>
+
     <input type="password" id="newPassword" placeholder="New Password">
     <button onclick="changePassword()">Update Password</button>
 
@@ -69,62 +83,30 @@
 document.addEventListener("DOMContentLoaded", function(){
     // Employee data
     const employees = {
-
-		'eliza': { password:'1234', irs:[
-		  { date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }
-         ]},
+        'eliza': { password:'1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
         'rachelle': { password:'1234', irs:[] },
-        'ramy': { password:'1234', irs:[
-            {date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'ramy': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
         'penales': { password:'1234', irs:[] },
         'joshua': { password:'1234', irs:[] },
-        'ramos': { password:'1234', irs:[
-            {date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'jules': { password:'1234', irs:[
-            {date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'rulona': { password:'1234', irs:[
-            {date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'dave': { password:'1234', irs:[
-            {date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'jm': { password:'1234', irs:[
-            {date:'DECEMBER 12, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'allan': { password:'1234', irs:[
-            {date:'JANUARY 1, 2026', incident:'Tardiness', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'michael': { password:'1234', irs:[
-            {date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'},
-            {date:'DECEMBER 2-4, 2025', incident:'', status:'SUSPENDED', note:'Warning for Termination'}
-        ]},
-        'mark': { password:'1234', irs:[
-            {date:'JANUARY 1, 2026', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
+        'ramos': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jules': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', Status:'IR SERVED', note:'Warning for Suspension'}]},
+        'rulona': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'dave': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'jm': { password:'1234', irs:[{date:'DECEMBER 12, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'allan': { password:'1234', irs:[{date:'JANUARY 1, 2026', incident:'Tardiness', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'michael': { password:'1234', irs:[{date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}, {date:'DECEMBER 2-4, 2025', incident:'', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'mark': { password:'1234', irs:[{date:'JANUARY 1, 2026', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
         'rico': { password:'1234', irs:[] },
-        'sitoy': { password:'1234', irs:[
-            {date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
-        'valerie': { password:'1234', irs:[
-            {date:'NOVEMBER 20, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'},
-            {date:'JANUARY 26-29, 2026', incident:'', status:'SUSPENDED', note:'Warning for Termination'}
-        ]},
-        'khevin': { password:'1234', irs:[
-            {date:'NOVEMBER 29, 2025', incident:'', status:'IR SERVED', note:'Warning for Suspension'}
-        ]},
+        'sitoy': { password:'1234', irs:[{date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'valerie': { password:'1234', irs:[{date:'NOVEMBER 20, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}, {date:'JANUARY 26-29, 2026', incident:'', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'khevin': { password:'1234', irs:[{date:'NOVEMBER 29, 2025', incident:'', status:'IR SERVED', note:'Warning for Suspension'}]},
         'cm': { password:'1234', irs:[] }
     };
 
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', function(e){
         e.preventDefault();
-        const user = document
- 		 .getElementById('username')
-          .value
- 	      .trim()
-		  .toLowerCase();
+        const user = document.getElementById('username').value.trim().toLowerCase();
         const pass = document.getElementById('password').value;
 
         if(employees[user] && employees[user].password===pass){
@@ -132,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function(){
             document.getElementById('portal').style.display='block';
             document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase()+user.slice(1);
             loadIR(user);
+            loadLeaves(user);
         } else {
             document.getElementById('loginMessage').innerText='Invalid username or password';
         }
@@ -149,6 +132,35 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     }
 
+    function loadLeaves(user){
+        const table = document.getElementById('leaveTable');
+        table.innerHTML = '<tr><th>Date</th><th>Reason</th><th>Status</th></tr>';
+        if(!employees[user].leaves) return;
+        employees[user].leaves.forEach(l=>{
+            const row = table.insertRow();
+            row.insertCell(0).innerText = l.date;
+            row.insertCell(1).innerText = l.reason;
+            row.insertCell(2).innerText = l.status;
+        });
+    }
+
+    const leaveForm = document.getElementById('leaveForm');
+    leaveForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const user = document.getElementById('employeeName').innerText.toLowerCase();
+        const date = document.getElementById('leaveDate').value;
+        const reason = document.getElementById('leaveReason').value;
+
+        if(!date || !reason) return;
+
+        if(!employees[user].leaves) employees[user].leaves = [];
+        employees[user].leaves.push({date: date, reason: reason, status: 'Pending'});
+
+        document.getElementById('leaveMessage').innerText = 'Leave submitted successfully!';
+        leaveForm.reset();
+        loadLeaves(user);
+    });
+
     window.logout = function(){
         document.getElementById('portal').style.display='none';
         document.getElementById('login').style.display='block';
@@ -158,35 +170,26 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     window.changePassword = function(){
-    const newPass = document.getElementById('newPassword').value;
-    const user = document.getElementById('employeeName').innerText.toLowerCase();
+        const newPass = document.getElementById('newPassword').value;
+        const user = document.getElementById('employeeName').innerText.toLowerCase();
 
-    if (!newPass) {
-        alert('Enter a new password');
-        return;
-    }
+        if (!newPass) {
+            alert('Enter a new password');
+            return;
+        }
 
-    if (newPass === employees[user].password){
-        alert('New password must be different from the old one');
-        return;
-    }
+        if (newPass === employees[user].password){
+            alert('New password must be different from the old one');
+            return;
+        }
 
-    employees[user].password = newPass;
-    alert('Password updated successfully!');
-    document.getElementById('newPassword').value = '';
-};
-	document.getElementById('login').style.display = 'block';
-	});
+        employees[user].password = newPass;
+        alert('Password updated successfully!');
+        document.getElementById('newPassword').value = '';
+    };
+
+    document.getElementById('login').style.display = 'block';
+});
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
