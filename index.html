@@ -158,25 +158,28 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     window.changePassword = function(){
-        const newPass = document.getElementById('newPassword').value;
-        const user = document.getElementById('employeeName').innerText.toLowerCase();
-        if (!newPass) {
-			alert('Enter a new password');
-			return;
+    const newPass = document.getElementById('newPassword').value;
+    const user = document.getElementById('employeeName').innerText.toLowerCase();
+
+    if (!newPass) {
+        alert('Enter a new password');
+        return;
     }
-		if (newPass === employees[user].password){
-			alert('New password must be different from the old one');
-			return;
-		}
 
-		employees[user].password = newPass;
-		alert('Password updated succesfully');
+    if (newPass === employees[user].password){
+        alert('New password must be different from the old one');
+        return;
+    }
 
-    document.getElementById('login').style.display='block';
-});
+    employees[user].password = newPass;
+    alert('Password updated successfully!');
+    document.getElementById('newPassword').value = '';
+};
+
 </script>
 </body>
 </html>
+
 
 
 
