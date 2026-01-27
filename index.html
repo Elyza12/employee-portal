@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Employee Portal</title>
+<title>Awi Employee Portal</title>
 <style>
 section { display:none; padding:20px; max-width:900px; margin:20px auto; background:white; border-radius:8px; box-shadow:0 0 10px #ccc; }
 body { font-family: Arial,sans-serif; background:#f4f4f4; margin:0; padding:0; }
@@ -19,7 +19,7 @@ img.schedule { width:100%; max-width:1000px; border:1px solid #ccc; border-radiu
 </style>
 </head>
 <body>
-<header>Employee Portal</header>
+<header>Awi Employee Portal</header>
 
 <section id="login">
     <h2>Login</h2>
@@ -52,11 +52,30 @@ img.schedule { width:100%; max-width:1000px; border:1px solid #ccc; border-radiu
 document.addEventListener("DOMContentLoaded", function(){
     document.getElementById('login').style.display = 'block';
 
-    const employees = {
+    const employees = {    
         'eliza': { password:'1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
         'rachelle': { password:'1234', irs:[] },
         'ramy': { password:'1234', irs:[{ date:'NOVEMBER 16, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension' }]},
-    };
+        'penales': {password:'1234', irs:[]},
+        'joshua': { password:'1234', irs:[]},
+        'ramos': { password: '1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
+        'jules': { password: '1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
+        'rulona': { password: '1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
+        'dave': { password: '1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
+        'jm': { password: '1234', irs:[{ date:'December 12, 2025', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]}
+        'allan': { password: '1234', irs:[{ date:'January 1, 2026, incident:'Tardiness', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'michael': { password: '1234', irs:[{ date:'November 16, 2025, incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension', date:'December 2-4, 2025, incident:, status:'SUSPENDED', note:'Warning for Termination'}]},
+        'gerald': { password: '1234', irs:[]},
+        'mark': { password: '1234', irs:[{ date:'January 1, 2026', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'rico': { password: '1234', irs:[{ date:'January 26, 2026', incident:'Using of gadgets while on duty', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'sitoy': { password: '1234', irs:[{ date:'January 23, 2026', incident:'Food Violation Policy', status:'IR SERVED', note:'Warning for Suspension' }]},
+        'genalou': { password: '1234', irs:[]},
+        'grace': { password: '1234', irs:[]},
+        'jeanette': { password: '1234', irs:[]},
+        'valerie': { password: '1234', irs:[{date:'November 20, 2026', incident:'AWOL', status:'IR SERVED', note:'Warning for Suspension', date:'January 26-29, 2026', incident:'Food Violation Policy', status:'SUSPENDED', note:'Warning for Termination'}]},
+        'khevin': { password: '1234', irs:[{date:'November 29, 2026', incident:'Grave Misconduct', status:'IR SERVED', note:'Warning for Suspension'}]},
+        'cm': { password: '1234', irs:[]}
+    
 
     document.getElementById('loginForm').addEventListener('submit', function(e){
         e.preventDefault();
@@ -114,3 +133,4 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 </body>
 </html>
+
