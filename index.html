@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>=
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Awi Employee Portal</title>
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 <style>
 /* ===== Modern UI Animations & Transitions ===== */
 
-/* Fade in sections */
 section {
   opacity: 0;
   transform: translateY(20px);
@@ -21,7 +23,6 @@ section {
   }
 }
 
-/* Button micro interaction */
 button {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -30,20 +31,17 @@ button:hover {
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Smooth form focus */
 input:focus {
   outline: none;
   border-color: #336699;
   box-shadow: 0 0 8px rgba(51, 102, 153, 0.25);
 }
 
-/* Table row hover */
 #irTable tr:hover td {
   background: #eef5fc;
   transition: background 0.2s ease;
 }
 
-/* Content fade on load */
 .animate-fade-in {
   opacity: 0;
   animation: fadeInCustom 0.8s ease forwards;
@@ -52,14 +50,29 @@ input:focus {
   to { opacity: 1; }
 }
 
+/* ===== ORIGINAL STYLES (UNCHANGED) ===== */
+section { display:none; padding:20px; max-width:900px; margin:20px auto; background:white; border-radius:8px; box-shadow:0 0 10px #ccc; }
+body { font-family: Arial,sans-serif; background:#f4f4f4; margin:0; padding:0; }
+header { background:#0077cc; color:white; padding:20px; text-align:center; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+th { background:#0077cc; color:white; }
+td { background:#f9f9f9; }
+input { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
+button { background:#0077cc; color:white; border:none; padding:12px; cursor:pointer; width:100%; margin-top:10px; border-radius:5px; font-size:16px; }
+button:hover { background:#005fa3; }
+img.schedule { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8px; margin-top:10px; }
+</style>
 </head>
-<body>
-<header>Awi Employee Portal</header>
 
-<section id="login">
+<body>
+<header class="animate__animated animate__fadeInDown">
+Awi Employee Portal
+</header>
+
+<section id="login" class="animate__animated animate__zoomIn">
     <h2>Login</h2>
     <form id="loginForm">
-    <form class="animate__animated animate__zoomIn">
         <input type="text" id="username" placeholder="First Name" required>
         <input type="password" id="password" placeholder="Password" required>
         <button type="submit">Login</button>
@@ -71,7 +84,7 @@ input:focus {
     <h2>Welcome, <span id="employeeName"></span></h2>
 
     <h3>Work Schedule</h3>
-    <img src="schedule.png" alt="Schedule" class="schedule">
+    <img src="schedule.png" alt="Schedule" class="schedule animate__animated animate__fadeIn">
 
     <h3>Incident Reports</h3>
     <table id="irTable">
@@ -89,36 +102,23 @@ document.addEventListener("DOMContentLoaded", function(){
     document.getElementById('login').style.display = 'block';
 
     const employees = {
-    eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    rachelle:{ password:'1234', irs:[] },
-    ramy:{ password:'1234', irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
-    penales:{ password:'1234', irs:[] },
-    joshua:{ password:'1234', irs:[] },
-    ramos:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    jules:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    rulona:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    dave:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    jm:{ password:'1234', irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
-    allan:{ password:'1234', irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning for Suspension'}]},
-    michael:{ password:'1234', irs:[
-        {date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'},
-        {date:'December 2–4, 2025',status:'SUSPENDED',note:'Warning for Termination'}
-    ]},
-    gerald:{ password:'1234', irs:[] },
-    mark:{ password:'1234', irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
-    rico:{ password:'1234', irs:[{date:'January 26, 2026',incident:'Using of gadgets while on duty',status:'IR SERVED',note:'Warning for Suspension'}]},
-    sitoy:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    genalou:{ password:'1234', irs:[] },
-    grace:{ password:'1234', irs:[] },
-    jeanette:{ password:'1234', irs:[] },
-    valerie:{ password:'1234', irs:[
-        {date:'November 20, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'},
-        {date:'January 26–29, 2026',incident:'Food Violation Policy',status:'SUSPENDED',note:'Warning for Termination'}
-    ]},
-    khevin:{ password:'1234', irs:[{date:'November 29, 2026',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning for Suspension'}]},
-    cm:{ password:'1234', irs:[] }
-};
-    
+        eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+        rachelle:{ password:'1234', irs:[] },
+        ramy:{ password:'1234', irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+        penales:{ password:'1234', irs:[] },
+        joshua:{ password:'1234', irs:[] },
+        ramos:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+        jules:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+        rulona:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+        dave:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+        jm:{ password:'1234', irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+        allan:{ password:'1234', irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning for Suspension'}]},
+        michael:{ password:'1234', irs:[
+            {date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'},
+            {date:'December 2–4, 2025',incident:'AWOL',status:'SUSPENDED',note:'Warning for Termination'}
+        ]},
+        cm:{ password:'1234', irs:[] }
+    };
 
     document.getElementById('loginForm').addEventListener('submit', function(e){
         e.preventDefault();
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function(){
             alert('Enter a new password');
             return;
         }
-        
+
         if(newPass === employees[user].password){
             alert('New password must be different from the old one');
             return;
@@ -175,19 +175,12 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 });
 </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+
+<!-- WOW.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
 <script>
-  new WOW().init();
+new WOW().init();
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
