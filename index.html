@@ -11,7 +11,7 @@
 <style>
 /* ===== Modern UI Animations & Transitions ===== */
 
-section {
+.fade-up {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeUp 0.8s ease forwards;
@@ -151,12 +151,16 @@ document.addEventListener("DOMContentLoaded", function(){
         const user = document.getElementById('username').value.trim().toLowerCase();
         const pass = document.getElementById('password').value;
 
-        if(employees[user] && employees[user].password === pass){
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('portal').style.display = 'block';
-            document.getElementById('employeeName').innerText = user.charAt(0).toUpperCase() + user.slice(1);
-            loadIR(user);
-        } else {
+          if (employees[user] && employees[user].password === pass) {
+          document.getElementById('login').style.display = 'none';
+          document.getElementById('portal').style.display = 'block';
+          document.getElementById('portal').style.opacity = '1';
+          document.getElementById('portal').style.transform = 'translateY(0)';
+          document.getElementById('employeeName').innerText =
+          user.charAt(0).toUpperCase() + user.slice(1);
+          loadIR(user);
+            
+          } else {
             document.getElementById('loginMessage').innerText = 'Invalid username or password';
         }
     });
@@ -210,6 +214,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
