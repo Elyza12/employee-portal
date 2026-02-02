@@ -166,56 +166,59 @@ document.addEventListener("DOMContentLoaded", function(){
  }
 });
 
-  window.submitRequest = function(){
+ window.submitRequest = function(){
 
-    const date = document.getElementById("offDate").value;
-    const reason = document.getElementById("offReason").value;
-    const user = document.getElementById("employeeName").innerText;
+ const date = document.getElementById("offDate").value;
+ const reason = document.getElementById("offReason").value;
+ const user = document.getElementById("employeeName").innerText;
 
-    if(!date || !reason){
-      alert("Complete fields");
-      return;
-    }
-    let list = JSON.parse(localStorage.getItem("offRequests)) || [];
+ if(!date || !reason){
+  alert("Complete fields");
+  return;
+ }
 
-    list.push({
-      name:user,
-      date:date,
-      reason:reason,
-      time:new Date().toLocalString()
-    });
+ let list = JSON.parse(localStorage.getItem("offRequests")) || [];
 
-    localStorage.setItem("offRequests", JSON.stringfy(list));
+ list.push({
+  name:user,
+  date:date,
+  reason:reason,
+  time:new Date().toLocaleString()
+ });
 
-    alert("Request Submitted");
+ localStorage.setItem("offRequests", JSON.stringify(list));
 
-    document.getElementById("offDate").value="";
-    document.getElemenrById("offReason").value="";
+ alert("Request Submitted");
 
-    closeRequestForm();
-  }
+ document.getElementById("offDate").value="";
+ document.getElementById("offReason").value="";
 
-  function loadRequest(){
-    const table = document.getElementById("requestTable");
+ closeRequestForm();
+}
 
-    table.innerHTML = 
-      `<tr>
-      <th>Employee</th>
-      <th>Date</th>
-      <th>Reason</th>
-      <th>Time Requested</th>
-      </tr>`;
+function loadRequests(){
 
-    let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+ const table = document.getElementById("requestTable");
 
-    list.forEach(r=>{
-      let row = table.insertRow();
-      row.insertCell(0).innerText = r.name;
-      row.insertCell(1).innerText = r.date;
-      row.insertCell(2).innerText = r.reason;
-      row.insertCell(3).innerText = r.time;
-    });
-  }
+ table.innerHTML =
+ `<tr>
+  <th>Employee</th>
+  <th>Date</th>
+  <th>Reason</th>
+  <th>Time Requested</th>
+ </tr>`;
+
+ let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+
+ list.forEach(r=>{
+  let row = table.insertRow();
+  row.insertCell(0).innerText = r.name;
+  row.insertCell(1).innerText = r.date;
+  row.insertCell(2).innerText = r.reason;
+  row.insertCell(3).innerText = r.time;
+ });
+}
+
     const employees = {
         admin:{password:'admin1234',role:'admin',irs:[]},
         eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
@@ -326,6 +329,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
