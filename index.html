@@ -167,7 +167,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
  window.submitRequest = function(){
 
- 
  const date = document.getElementById("offDate").value;
  const reason = document.getElementById("offReason").value;
  const user = document.getElementById("employeeName").innerText;
@@ -183,9 +182,21 @@ document.addEventListener("DOMContentLoaded", function(){
   name:user,
   date:date,
   reason:reason,
-  time:new Date().toLocaleString()
-  done.false
+  time:new Date().toLocaleString(),
+  done:false
  });
+
+ localStorage.setItem("offRequests", JSON.stringify(list));
+
+ alert("Request Submitted");
+
+ document.getElementById("offDate").value="";
+ document.getElementById("offReason").value="";
+
+ closeRequestForm();
+}
+
+
 
  localStorage.setItem("offRequests", JSON.stringify(list));
 
@@ -232,15 +243,19 @@ function loadRequests(){
 
  });
 
-  window.markDone = function(index){
-    let list = JSON.parse(localStorage.getItem("offRequests")) || [];
-
-    list[index].done = true;
-
-    localStorage.setItem("offRequest", JSON.stringify(list));
-
-    loadRequests();
 }
+
+
+  window.markDone = function(index){
+ let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+
+ list[index].done = true;
+
+ localStorage.setItem("offRequests", JSON.stringify(list));
+
+ loadRequests();
+}
+
 
 
     const employees = {
@@ -359,6 +374,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
