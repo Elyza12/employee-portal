@@ -196,18 +196,6 @@ document.addEventListener("DOMContentLoaded", function(){
  closeRequestForm();
 }
 
-
-
- localStorage.setItem("offRequests", JSON.stringify(list));
-
- alert("Request Submitted");
-
- document.getElementById("offDate").value="";
- document.getElementById("offReason").value="";
-
- closeRequestForm();
-}
-
 function loadRequests(){
 
  const table = document.getElementById("requestTable");
@@ -374,6 +362,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
