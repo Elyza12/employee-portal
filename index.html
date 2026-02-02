@@ -63,10 +63,8 @@ button { background:#0077cc; color:white; border:none; padding:12px; cursor:poin
 button:hover { background:#005fa3; }
 img.sched { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8px; margin-top:10px; }
   #login {
-    display: block !important;
-    opacity: 1 !important;
-    animation-fill-mode: both;
-  }
+  display: block;
+}
   #portal{
     display: none;
   }
@@ -283,12 +281,17 @@ function loadRequests(){
     }
 
     window.logout = function(){
-        document.getElementById('portal').style.display='none';
-        document.getElementById('login').style.display='block';
-        document.getElementById('username').value='';
-        document.getElementById('password').value='';
-        document.getElementById('loginMessage').innerText='';
-    }
+    document.getElementById('portal').style.display='none';
+    document.getElementById('adminPanel').style.display='none';
+    document.getElementById('requestFormSection').style.display='none';
+
+    document.getElementById('login').style.display='block';
+
+    document.getElementById('username').value='';
+    document.getElementById('password').value='';
+    document.getElementById('loginMessage').innerText='';
+}
+
 
     window.changePassword = function(){
         const newPass = document.getElementById('newPassword').value;
@@ -329,6 +332,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
