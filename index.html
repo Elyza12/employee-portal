@@ -84,6 +84,9 @@ img.sched { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8
   .animate__zoomIn {
     animation: none; !important;
   }
+  #requestFormSection, #adminPanel{
+    display:none;
+  }
 </style>
 </head>
 
@@ -116,14 +119,105 @@ Awi Employee Portal
 
     <input type="password" id="newPassword" placeholder="New Password">
     <button onclick="changePassword()">Update Password</button>
+
+    <button onclick="openRequestForm()">Request Off</button>
+
     <button style="margin-top:20px;" onclick="logout()">Logout</button>
 </section>
+
+  <section id="requestFormSection">
+    <h2>Request Day Off</h2>
+
+    <label>Select Date (Monday–Thursday only)</label>
+    <input type="date" id="offDate">
+
+    <label>Reason</label>
+    <textarea id="offReason" style="width:100%; padding:10px;"></textarea>
+
+    <button onclick="submitRequest()">Submit Request</button>
+    <button onclick="closeRequestForm()">Cancel</button>
+</section>
+
+<section id="adminPanel">
+    <h2>Admin — Request Off List</h2>
+
+    <table id="requestTable">
+        <tr>
+            <th>Employee</th>
+            <th>Date</th>
+            <th>Reason</th>
+            <th>Time Requested</th>
+        </tr>
+    </table>
+
+    <button onclick="logout()">Logout</button>
+</section>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){
     document.getElementById('login').style.display = 'block';
 
+    document.getElementById("offDate").addEventListener("input", function(){
+ const d = new Date(this.value).getDay();
+ if(d === 0 || d === 5 || d === 6){
+  alert("Only Monday to Thursday allowed");
+  this.value="";
+ }
+});
+
+  window.submitRequest = function(){
+
+    const date = document.getElementById("offDate").value;
+    const reason = document.getElementById("offReason").value;
+    const user = document.getElementById("employeeName").innerText;
+
+    if(!date || !reason){
+      alert("Complete fields");
+      return;
+    }
+    let list = JSON.parse(localStorage.getItem("offRequests)) || [];
+
+    list.push({
+      name:user,
+      date:date,
+      reason:reason,
+      time:new Date().toLocalString()
+    });
+
+    localStorage.setItem("offRequests", JSON.stringfy(list));
+
+    alert("Request Submitted");
+
+    document.getElementById("offDate").value="";
+    document.getElemenrById("offReason").value="";
+
+    closeRequestForm();
+  }
+
+  function loadRequest(){
+    const table = document.getElementById("requestTable");
+
+    table.innerHTML = 
+      `<tr>
+      <th>Employee</th>
+      <th>Date</th>
+      <th>Reason</th>
+      <th>Time Requested</th>
+      </tr>`;
+
+    let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+
+    list.forEach(r=>{
+      let row = table.insertRow();
+      row.insertCell(0).innerText = r.name;
+      row.insertCell(1).innerText = r.date;
+      row.insertCell(2).innerText = r.reason;
+      row.insertCell(3).innerText = r.time;
+    });
+  }
     const employees = {
+        admin:{password:'admin1234',role:'admin',irs:[]},
         eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
         rachelle:{ password:'1234', irs:[] },
         ramy:{ password:'1234', irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
@@ -152,15 +246,23 @@ document.addEventListener("DOMContentLoaded", function(){
         const pass = document.getElementById('password').value;
 
           if (employees[user] && employees[user].password === pass) {
-          document.getElementById('login').style.display = 'none';
-          document.getElementById('portal').style.display = 'block';
-          document.getElementById('portal').style.opacity = '1';
-          document.getElementById('portal').style.transform = 'translateY(0)';
-          document.getElementById('employeeName').innerText =
-          user.charAt(0).toUpperCase() + user.slice(1);
-          loadIR(user);
-            
-          } else {
+
+    if(employees[user].role === "admin"){
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadRequests();
+        return;
+    }
+
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('portal').style.display = 'block';
+
+    document.getElementById('employeeName').innerText =
+    user.charAt(0).toUpperCase() + user.slice(1);
+
+    loadIR(user);
+}
+ else {
             document.getElementById('loginMessage').innerText = 'Invalid username or password';
         }
     });
@@ -203,6 +305,16 @@ document.addEventListener("DOMContentLoaded", function(){
         alert('Password updated successfully!');
         document.getElementById('newPassword').value = '';
     }
+    window.openRequestForm = function(){
+ document.getElementById('portal').style.display='none';
+ document.getElementById('requestFormSection').style.display='block';
+}
+
+window.closeRequestForm = function(){
+ document.getElementById('requestFormSection').style.display='none';
+ document.getElementById('portal').style.display='block';
+}
+
 });
 </script>
 
@@ -214,6 +326,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
