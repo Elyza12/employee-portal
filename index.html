@@ -145,6 +145,7 @@ Awi Employee Portal
             <th>Date</th>
             <th>Reason</th>
             <th>Time Requested</th>
+            <th>Status</th>
         </tr>
     </table>
 
@@ -166,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
  window.submitRequest = function(){
 
+ 
  const date = document.getElementById("offDate").value;
  const reason = document.getElementById("offReason").value;
  const user = document.getElementById("employeeName").innerText;
@@ -182,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function(){
   date:date,
   reason:reason,
   time:new Date().toLocaleString()
+  done.false
  });
 
  localStorage.setItem("offRequests", JSON.stringify(list));
@@ -204,18 +207,41 @@ function loadRequests(){
   <th>Date</th>
   <th>Reason</th>
   <th>Time Requested</th>
+  <th>Status</th>
  </tr>`;
 
  let list = JSON.parse(localStorage.getItem("offRequests")) || [];
 
- list.forEach(r=>{
+ list.forEach((r,index)=>{
+
   let row = table.insertRow();
+
   row.insertCell(0).innerText = r.name;
   row.insertCell(1).innerText = r.date;
   row.insertCell(2).innerText = r.reason;
   row.insertCell(3).innerText = r.time;
+
+  let statusCell = row.insertCell(4);
+
+  if(r.done){
+    statusCell.innerHTML = "✅ Done";
+  }else{
+    statusCell.innerHTML =
+    `<button onclick="markDone(${index})">✔ Mark Done</button>`;
+  }
+
  });
+
+  window.markDone = function(index){
+    let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+
+    list[index].done = true;
+
+    localStorage.setItem("offRequest", JSON.stringify(list));
+
+    loadRequests();
 }
+
 
     const employees = {
         admin:{password:'admin1234',role:'admin',irs:[]},
@@ -333,6 +359,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
