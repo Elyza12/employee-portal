@@ -205,15 +205,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 async function loadRequests(){
 
- const sheetID = "1U6X-cXYwAMintVG2WAh4GtWkGYG_ZTxh3whPhqWXKN0";
- const apiKey = "AIzaSyBfdg9nTmIN2-tleT3YXMCP8jI49wWFKlQ";
-
- const url =
- `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/RequestOff!A:E?key=${apiKey}`;
-
- const res = await fetch(url);
- const data = await res.json();
-
  const table = document.getElementById("requestTable");
 
  table.innerHTML =
@@ -225,18 +216,30 @@ async function loadRequests(){
   <th>Status</th>
  </tr>`;
 
- if(!data.values) return;
+ try{
 
- data.values.slice(1).forEach(r=>{
-   let row = table.insertRow();
-   row.insertCell(0).innerText = r[0] || "";
-   row.insertCell(1).innerText = r[1] || "";
-   row.insertCell(2).innerText = r[2] || "";
-   row.insertCell(3).innerText = r[3] || "";
-   row.insertCell(4).innerText = r[4] || "Pending";
+ const res = await fetch("1da174wxs9JzRbOVtoWA9yZePd8nC7eGfst8zNn36Ngg");
+ const data = await res.json();
+
+ data.forEach(r => {
+
+  let row = table.insertRow();
+
+  row.insertCell(0).innerText = r.name;
+  row.insertCell(1).innerText = r.date;
+  row.insertCell(2).innerText = r.reason;
+  row.insertCell(3).innerText = new Date(r.time).toLocaleString();
+
+  let statusCell = row.insertCell(4);
+  statusCell.innerText = r.status;
+
  });
-}
 
+ }catch(err){
+   console.log(err);
+ }
+
+}
 
 
   window.markDone = function(index){
@@ -367,6 +370,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
