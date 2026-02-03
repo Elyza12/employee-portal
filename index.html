@@ -172,36 +172,36 @@ document.addEventListener("DOMContentLoaded", function(){
  const user = document.getElementById("employeeName").innerText;
 
  if(!date || !reason){
-  alert("Complete fields");
+  alert("Enter a reason");
   return;
  }
 
- const sheetID = "1U6X-cXYwAMintVG2WAh4GtWkGYG_ZTxh3whPhqWXKN0";
- const apiKey = "AIzaSyBfdg9nTmIN2-tleT3YXMCP8jI49wWFKlQ";
-
- const url =
- `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/RequestOff!A:E:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
-
- const body = {
-   values: [[
-     user,
-     date,
-     reason,
-     new Date().toLocaleString(),
-     "Pending"
-   ]]
+ const data = {
+   name: user,
+   date: date,
+   reason: reason
  };
 
- await fetch(url,{
-   method:"POST",
-   headers:{ "Content-Type":"application/json" },
-   body: JSON.stringify(body)
- });
+ try {
 
- alert("Request Saved Permanently ✅");
+  await fetch("https://script.google.com/macros/s/AKfycbxOxZzT1cdIKhD9Elpj4baKjk--rmRKRNU08GsY3EoQfLZO4YE_2opGdillQN95KyeI/exec", {
+   method: "POST",
+   body: JSON.stringify(data)
+  });
 
- closeRequestForm();
+  alert("Request Submitted Successfully");
+
+  document.getElementById("offDate").value="";
+  document.getElementById("offReason").value="";
+
+  closeRequestForm();
+
+ } catch(err){
+   alert("Error sending request");
+ }
+
 }
+
 
 async function loadRequests(){
 
@@ -367,6 +367,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
