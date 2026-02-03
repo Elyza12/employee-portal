@@ -165,38 +165,54 @@ document.addEventListener("DOMContentLoaded", function(){
  }
 });
 
- window.submitRequest = function(){
+ window.submitRequest = async function(){
 
  const date = document.getElementById("offDate").value;
  const reason = document.getElementById("offReason").value;
  const user = document.getElementById("employeeName").innerText;
 
  if(!date || !reason){
-  alert("Enter a reason");
+  alert("Complete fields");
   return;
  }
 
- let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+ const sheetID = "1U6X-cXYwAMintVG2WAh4GtWkGYG_ZTxh3whPhqWXKN0";
+ const apiKey = "AIzaSyBfdg9nTmIN2-tleT3YXMCP8jI49wWFKlQ";
 
- list.push({
-  name:user,
-  date:date,
-  reason:reason,
-  time:new Date().toLocaleString(),
-  done:false
+ const url =
+ `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/RequestOff!A:E:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
+
+ const body = {
+   values: [[
+     user,
+     date,
+     reason,
+     new Date().toLocaleString(),
+     "Pending"
+   ]]
+ };
+
+ await fetch(url,{
+   method:"POST",
+   headers:{ "Content-Type":"application/json" },
+   body: JSON.stringify(body)
  });
 
- localStorage.setItem("offRequests", JSON.stringify(list));
-
- alert("Request Submitted");
-
- document.getElementById("offDate").value="";
- document.getElementById("offReason").value="";
+ alert("Request Saved Permanently ✅");
 
  closeRequestForm();
 }
 
-function loadRequests(){
+async function loadRequests(){
+
+ const sheetID = "1U6X-cXYwAMintVG2WAh4GtWkGYG_ZTxh3whPhqWXKN0";
+ const apiKey = "AIzaSyBfdg9nTmIN2-tleT3YXMCP8jI49wWFKlQ";
+
+ const url =
+ `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/RequestOff!A:E?key=${apiKey}`;
+
+ const res = await fetch(url);
+ const data = await res.json();
 
  const table = document.getElementById("requestTable");
 
@@ -209,29 +225,18 @@ function loadRequests(){
   <th>Status</th>
  </tr>`;
 
- let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+ if(!data.values) return;
 
- list.forEach((r,index)=>{
-
-  let row = table.insertRow();
-
-  row.insertCell(0).innerText = r.name;
-  row.insertCell(1).innerText = r.date;
-  row.insertCell(2).innerText = r.reason;
-  row.insertCell(3).innerText = r.time;
-
-  let statusCell = row.insertCell(4);
-
-  if(r.done){
-    statusCell.innerHTML = "✅ Done";
-  }else{
-    statusCell.innerHTML =
-    `<button onclick="markDone(${index})">✔ Mark Done</button>`;
-  }
-
+ data.values.slice(1).forEach(r=>{
+   let row = table.insertRow();
+   row.insertCell(0).innerText = r[0] || "";
+   row.insertCell(1).innerText = r[1] || "";
+   row.insertCell(2).innerText = r[2] || "";
+   row.insertCell(3).innerText = r[3] || "";
+   row.insertCell(4).innerText = r[4] || "Pending";
  });
-
 }
+
 
 
   window.markDone = function(index){
@@ -362,6 +367,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
