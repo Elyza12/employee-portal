@@ -167,78 +167,82 @@ document.addEventListener("DOMContentLoaded", function(){
 
  window.submitRequest = async function(){
 
- const date = document.getElementById("offDate").value;
- const reason = document.getElementById("offReason").value;
- const user = document.getElementById("employeeName").innerText;
+const date = document.getElementById("offDate").value;
+const reason = document.getElementById("offReason").value;
+const user = document.getElementById("employeeName").innerText;
 
- if(!date || !reason){
-  alert("Enter a reason");
-  return;
- }
+if(!date || !reason){
+alert("Enter a reason");
+return;
+}
 
- const data = {
-   name: user,
-   date: date,
-   reason: reason
- };
+const data = {
+name: user,
+date: date,
+reason: reason
+};
 
- try {
+try {
 
-  await fetch("https://script.google.com/macros/s/AKfycbxOxZzT1cdIKhD9Elpj4baKjk--rmRKRNU08GsY3EoQfLZO4YE_2opGdillQN95KyeI/exec", {
-   method: "POST",
-   body: JSON.stringify(data)
-  });
+const response = await fetch("https://script.google.com/macros/s/AKfycbxOxZzT1cdIKhD9Elpj4baKjk--rmRKRNU08GsY3EoQfLZO4YE_2opGdillQN95KyeI/exec", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify(data)
+});
 
-  alert("Request Submitted Successfully");
+const result = await response.json();
 
-  document.getElementById("offDate").value="";
-  document.getElementById("offReason").value="";
+if(result.status === "success"){
+alert("Request Submitted Successfully");
+document.getElementById("offDate").value="";
+document.getElementById("offReason").value="";
+closeRequestForm();
+} else {
+alert("Server Error: " + result.message);
+}
 
-  closeRequestForm();
-
- } catch(err){
-   alert("Error sending request");
- }
-
+} catch(err){
+console.error(err);
+alert("Error sending request");
+}
 }
 
 
 async function loadRequests(){
 
- const table = document.getElementById("requestTable");
+const table = document.getElementById("requestTable");
 
- table.innerHTML =
- `<tr>
-  <th>Employee</th>
-  <th>Date</th>
-  <th>Reason</th>
-  <th>Time Requested</th>
-  <th>Status</th>
- </tr>`;
+table.innerHTML =
+`<tr>
+<th>Employee</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Time Requested</th>
+<th>Status</th>
+</tr>`;
 
- try{
+try{
 
- const res = await fetch("1da174wxs9JzRbOVtoWA9yZePd8nC7eGfst8zNn36Ngg");
- const data = await res.json();
+const res = await fetch("https://script.google.com/macros/s/AKfycbxOxZzT1cdIKhD9Elpj4baKjk--rmRKRNU08GsY3EoQfLZO4YE_2opGdillQN95KyeI/exec?action=getRequests");
+const data = await res.json();
 
- data.forEach(r => {
+data.forEach(r => {
 
-  let row = table.insertRow();
+let row = table.insertRow();
 
-  row.insertCell(0).innerText = r.name;
-  row.insertCell(1).innerText = r.date;
-  row.insertCell(2).innerText = r.reason;
-  row.insertCell(3).innerText = new Date(r.time).toLocaleString();
+row.insertCell(0).innerText = r.name;
+row.insertCell(1).innerText = r.date;
+row.insertCell(2).innerText = r.reason;
+row.insertCell(3).innerText = new Date(r.time).toLocaleString();
+row.insertCell(4).innerText = r.status;
 
-  let statusCell = row.insertCell(4);
-  statusCell.innerText = r.status;
+});
 
- });
-
- }catch(err){
-   console.log(err);
- }
-
+}catch(err){
+console.log(err);
+}
 }
 
 
@@ -374,6 +378,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
