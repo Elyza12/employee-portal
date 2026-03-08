@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Awi Samgyupsal Employee Portal</title>
+<title>Samgyupsal Employee Portal</title>
 
 <style>
 
@@ -10,7 +10,6 @@ body{
 font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#1b1b1b,#2a2a2a);
 margin:0;
-padding:0;
 color:white;
 }
 
@@ -18,45 +17,66 @@ header{
 background:#8b0000;
 padding:20px;
 text-align:center;
-font-size:28px;
+font-size:26px;
 }
 
-.container{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-margin-top:40px;
+section{
+display:none;
+padding:20px;
+max-width:900px;
+margin:auto;
+background:white;
+color:black;
+border-radius:10px;
+margin-top:30px;
 }
 
-.card{
-background:rgba(0,0,0,0.7);
-padding:30px;
-margin:20px;
-border-radius:12px;
-width:260px;
-text-align:center;
-box-shadow:0 0 15px rgba(0,0,0,0.5);
-transition:0.3s;
+#login{
+display:block;
 }
 
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 0 20px #d4a373;
+input,textarea{
+width:100%;
+padding:10px;
+margin:8px 0;
 }
 
 button{
 background:#b22222;
-border:none;
-padding:12px 20px;
 color:white;
-border-radius:6px;
+border:none;
+padding:12px;
 cursor:pointer;
-font-weight:bold;
+border-radius:6px;
+width:100%;
 margin-top:10px;
 }
 
 button:hover{
 background:#8b0000;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+}
+
+th{
+background:#8b0000;
+color:white;
+}
+
+img.sched{
+width:100%;
+max-width:900px;
+cursor:pointer;
+border-radius:8px;
 }
 
 .modal{
@@ -74,43 +94,9 @@ align-items:center;
 .modal-content{
 background:white;
 color:black;
-padding:30px;
+padding:25px;
 border-radius:10px;
-width:320px;
-}
-
-input,textarea{
-width:100%;
-padding:10px;
-margin-top:10px;
-margin-bottom:10px;
-}
-
-table{
-width:90%;
-margin:auto;
-border-collapse:collapse;
-background:white;
-color:black;
-margin-top:40px;
-}
-
-th{
-background:#b22222;
-color:white;
-padding:10px;
-}
-
-td{
-padding:10px;
-border-bottom:1px solid #ddd;
-}
-
-@media(max-width:768px){
-.container{
-flex-direction:column;
-align-items:center;
-}
+width:300px;
 }
 
 </style>
@@ -119,70 +105,72 @@ align-items:center;
 <body>
 
 <header>
-🍖 Awi Samgyupsal Employee Portal
+🍖 Samgyupsal Employee Portal
 </header>
 
-<div class="container">
+<!-- LOGIN -->
 
-<div class="card">
-<h2>🔥 Request Day Off</h2>
-<p>Submit leave request</p>
-<button onclick="openRequestForm()">Request</button>
-</div>
+<section id="login">
 
-<div class="card">
-<h2>📋 Admin Panel</h2>
-<p>View employee requests</p>
-<button onclick="loadRequests()">Load Requests</button>
-</div>
+<h2>Employee Login</h2>
 
-<div class="card">
+<form id="loginForm">
+
+<input type="text" id="username" placeholder="First Name" required>
+
+<input type="password" id="password" placeholder="Password" required>
+
+<button type="submit">Login</button>
+
+</form>
+
+<p id="loginMessage" style="color:red;"></p>
+
+</section>
+
+<!-- EMPLOYEE PORTAL -->
+
+<section id="portal">
+
+<h2>Welcome, <span id="employeeName"></span></h2>
 
 <h3>📅 Work Schedule</h3>
 
-<img src="sched.png"
-style="cursor:pointer;width:100%;border-radius:8px;"
-onclick="openSchedule()">
+<img src="sched.png" class="sched" onclick="openSchedule()">
 
-<p style="font-size:13px;margin-top:8px;">
-Click schedule to enlarge
-</p>
+<h3>Request Day Off</h3>
 
-</div>
+<button onclick="openRequestForm()">Request Day Off</button>
 
-</div>
+<button onclick="logout()">Logout</button>
 
-<!-- Schedule Viewer -->
-<div id="scheduleViewer" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-justify-content:center;
-align-items:center;
-z-index:1000;
-">
+</section>
 
-<img src="sched.png" style="max-width:90%;max-height:90%;border-radius:10px;">
+<!-- ADMIN PANEL -->
 
-<div style="
-position:absolute;
-top:20px;
-right:30px;
-color:white;
-font-size:30px;
-cursor:pointer;
-"
-onclick="closeSchedule()">
-✖
-</div>
+<section id="adminPanel">
 
-</div>
+<h2>Admin Panel</h2>
 
-<!-- Request Modal -->
+<table id="requestTable">
+
+<tr>
+<th>Employee</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+
+</table>
+
+<button onclick="loadRequests()">Refresh</button>
+<button onclick="logout()">Logout</button>
+
+</section>
+
+<!-- REQUEST FORM -->
+
 <div id="requestModal" class="modal">
 
 <div class="modal-content">
@@ -194,64 +182,120 @@ onclick="closeSchedule()">
 <textarea id="offReason" placeholder="Reason"></textarea>
 
 <button onclick="submitRequest()">Submit</button>
-<button onclick="closeRequestForm()">Close</button>
+
+<button onclick="closeRequestForm()">Cancel</button>
 
 </div>
+
 </div>
 
-<!-- Admin Table -->
-<table id="requestTable">
+<!-- SCHEDULE VIEWER -->
 
-<tr>
-<th>Employee</th>
-<th>Date</th>
-<th>Reason</th>
-<th>Time Requested</th>
-<th>Status</th>
-</tr>
+<div id="scheduleViewer" class="modal">
 
-</table>
+<img src="sched.png" style="max-width:90%;max-height:90%;">
+
+<div style="position:absolute;top:20px;right:30px;color:white;font-size:30px;cursor:pointer;"
+onclick="closeSchedule()">✖</div>
+
+</div>
 
 <script>
 
 const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 
-/* Schedule Viewer */
+const employees={
+
+admin:{password:"admin1234",role:"admin"},
+
+elyza:{password:"1234"},
+eliza:{password:"1234"},
+ramy:{password:"1234"},
+joshua:{password:"1234"},
+jules:{password:"1234"}
+
+};
+
+document.getElementById("loginForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const user=document.getElementById("username").value.toLowerCase();
+const pass=document.getElementById("password").value;
+
+if(employees[user] && employees[user].password===pass){
+
+if(employees[user].role==="admin"){
+
+document.getElementById("login").style.display="none";
+document.getElementById("adminPanel").style.display="block";
+
+loadRequests();
+return;
+
+}
+
+document.getElementById("login").style.display="none";
+document.getElementById("portal").style.display="block";
+
+document.getElementById("employeeName").innerText=user;
+
+}else{
+
+document.getElementById("loginMessage").innerText="Invalid login";
+
+}
+
+});
+
+function logout(){
+
+document.getElementById("portal").style.display="none";
+document.getElementById("adminPanel").style.display="none";
+document.getElementById("login").style.display="block";
+
+}
 
 function openSchedule(){
+
 document.getElementById("scheduleViewer").style.display="flex";
+
 }
 
 function closeSchedule(){
+
 document.getElementById("scheduleViewer").style.display="none";
+
 }
 
-/* Request Modal */
-
 function openRequestForm(){
+
 document.getElementById("requestModal").style.display="flex";
+
 }
 
 function closeRequestForm(){
-document.getElementById("requestModal").style.display="none";
-}
 
-/* Submit Request */
+document.getElementById("requestModal").style.display="none";
+
+}
 
 async function submitRequest(){
 
 const date=document.getElementById("offDate").value;
 const reason=document.getElementById("offReason").value;
+const user=document.getElementById("employeeName").innerText;
 
 if(!date || !reason){
-alert("Please complete the form");
+
+alert("Complete form");
 return;
+
 }
 
-try{
-
 const formData=new FormData();
-formData.append("name","Employee");
+
+formData.append("name",user);
 formData.append("date",date);
 formData.append("reason",reason);
 
@@ -260,36 +304,26 @@ method:"POST",
 body:formData
 });
 
-alert("Request submitted!");
+alert("Request sent!");
+
 closeRequestForm();
 
-}catch(err){
-
-console.log(err);
-alert("Error sending request");
-
 }
-
-}
-
-/* Load Requests */
 
 async function loadRequests(){
 
 const table=document.getElementById("requestTable");
 
-table.innerHTML=
-`<tr>
+table.innerHTML=`<tr>
 <th>Employee</th>
 <th>Date</th>
 <th>Reason</th>
-<th>Time Requested</th>
+<th>Time</th>
 <th>Status</th>
 </tr>`;
 
-try{
-
 const res=await fetch(WEBAPP);
+
 const data=await res.json();
 
 data.forEach(r=>{
@@ -304,14 +338,9 @@ row.insertCell(4).innerText=r.status;
 
 });
 
-}catch(err){
-console.log(err);
-}
-
 }
 
 </script>
 
 </body>
 </html>
-
