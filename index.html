@@ -1,345 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Samgyupsal Employee Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awi Employee Portal</title>
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
+/* ===== Modern UI Animations & Transitions ===== */
 
-body{
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#1b1b1b,#2a2a2a);
-margin:0;
-color:white;
+.fade-up {
+opacity: 0;
+transform: translateY(20px);
+animation: fadeUp 0.8s ease forwards;
+}
+@keyframes fadeUp {
+to {
+opacity: 1;
+transform: translateY(0);
+}
 }
 
-header{
-background:#8b0000;
-padding:20px;
-text-align:center;
-font-size:26px;
+button {
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+button:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-section{
+input:focus {
+outline: none;
+border-color: #336699;
+box-shadow: 0 0 8px rgba(51, 102, 153, 0.25);
+}
+
+#irTable tr:hover td {
+background: #eef5fc;
+transition: background 0.2s ease;
+}
+
+.animate-fade-in {
+opacity: 0;
+animation: fadeInCustom 0.8s ease forwards;
+}
+@keyframes fadeInCustom {
+to { opacity: 1; }
+}
+
+/* ===== ORIGINAL STYLES (UNCHANGED) ===== */
+section { display:none; padding:20px; max-width:900px; margin:20px auto; background:white; border-radius:8px; box-shadow:0 0 10px #ccc; }
+body { font-family: Arial,sans-serif; background:#f4f4f4; margin:0; padding:0; }
+header { background:#0077cc; color:white; padding:20px; text-align:center; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+th { background:#0077cc; color:white; }
+td { background:#f9f9f9; }
+input { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
+button { background:#0077cc; color:white; border:none; padding:12px; cursor:pointer; width:100%; margin-top:10px; border-radius:5px; font-size:16px; }
+button:hover { background:#005fa3; }
+img.sched { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8px; margin-top:10px; }
+#login {
+display: block;
+}
+#portal{
+display: none;
+}
+#login form{
+opacity: 0;
+transform: scale(0.92) translateY(20px);
+animation: mobileZoomIn 0.6s ease-out forwards;
+}
+@keyframes mobileZoomIn{
+to{
+opacity: 1;
+transform: scale(1) translateY(0);
+}
+}
+.animate__zoomIn {
+animation: none; !important;
+}
+#requestFormSection, #adminPanel{
 display:none;
-padding:20px;
-max-width:900px;
-margin:auto;
-background:white;
-color:black;
-border-radius:10px;
-margin-top:30px;
 }
-
-#login{
-display:block;
-}
-
-input,textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-}
-
-button{
-background:#b22222;
-color:white;
-border:none;
-padding:12px;
-cursor:pointer;
-border-radius:6px;
-width:100%;
-margin-top:10px;
-}
-
-button:hover{
-background:#8b0000;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
-
-th,td{
-border:1px solid #ddd;
-padding:10px;
-}
-
-th{
-background:#8b0000;
-color:white;
-}
-
-img.sched{
-width:100%;
-max-width:900px;
-cursor:pointer;
-border-radius:8px;
-}
-
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-justify-content:center;
-align-items:center;
-}
-
-.modal-content{
-background:white;
-color:black;
-padding:25px;
-border-radius:10px;
-width:300px;
-}
-
 </style>
 </head>
 
 <body>
-
-<header>
-🍖 Samgyupsal Employee Portal
+<header class="animate__animated animate__fadeInDown">
+Awi Employee Portal
 </header>
 
-<!-- LOGIN -->
-
-<section id="login">
-
-<h2>Employee Login</h2>
-
+<section id="login" class="animate__animated animate__zoomIn">
+<h2>Login</h2>
 <form id="loginForm">
-
 <input type="text" id="username" placeholder="First Name" required>
-
 <input type="password" id="password" placeholder="Password" required>
-
 <button type="submit">Login</button>
-
 </form>
-
 <p id="loginMessage" style="color:red;"></p>
-
 </section>
-
-<!-- EMPLOYEE PORTAL -->
 
 <section id="portal">
-
 <h2>Welcome, <span id="employeeName"></span></h2>
 
-<h3>📅 Work Schedule</h3>
+<h3>Work Schedule</h3>
+<img src="sched.png" alt="Sched" class="sched animate__animated animate__fadeIn">
 
-<img src="sched.png" class="sched" onclick="openSchedule()">
+<h3>Incident Reports</h3>
+<table id="irTable">
+<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>
+</table>
+<p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
 
-<h3>Request Day Off</h3>
+<input type="password" id="newPassword" placeholder="New Password">
+<button onclick="changePassword()">Update Password</button>
 
-<button onclick="openRequestForm()">Request Day Off</button>
+<button onclick="openRequestForm()">Request Off</button>
 
-<button onclick="logout()">Logout</button>
-
+<button style="margin-top:20px;" onclick="logout()">Logout</button>
 </section>
 
-<!-- ADMIN PANEL -->
+<section id="requestFormSection">
+<h2>Request Day Off</h2>
+
+<label>Select Date (Monday–Thursday only)</label>
+<input type="date" id="offDate">
+
+<label>Reason</label>
+<textarea id="offReason" style="width:100%; padding:10px;"></textarea>
+
+<button onclick="submitRequest()">Submit Request</button>
+<button onclick="closeRequestForm()">Cancel</button>
+</section>
 
 <section id="adminPanel">
-
-<h2>Admin Panel</h2>
+<h2>Admin — Request Off List</h2>
 
 <table id="requestTable">
-
 <tr>
 <th>Employee</th>
 <th>Date</th>
 <th>Reason</th>
-<th>Time</th>
+<th>Time Requested</th>
 <th>Status</th>
 </tr>
-
 </table>
 
-<button onclick="loadRequests()">Refresh</button>
 <button onclick="logout()">Logout</button>
-
 </section>
 
-<!-- REQUEST FORM -->
-
-<div id="requestModal" class="modal">
-
-<div class="modal-content">
-
-<h3>Request Day Off</h3>
-
-<input type="date" id="offDate">
-
-<textarea id="offReason" placeholder="Reason"></textarea>
-
-<button onclick="submitRequest()">Submit</button>
-
-<button onclick="closeRequestForm()">Cancel</button>
-
-</div>
-
-</div>
-
-<!-- SCHEDULE VIEWER -->
-
-<div id="scheduleViewer" class="modal">
-
-<img src="sched.png" style="max-width:90%;max-height:90%;">
-
-<div style="position:absolute;top:20px;right:30px;color:white;font-size:30px;cursor:pointer;"
-onclick="closeSchedule()">✖</div>
-
-</div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function(){
+document.getElementById('login').style.display = 'block';
 
-const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
-
-const employees={
-
-admin:{password:"admin1234",role:"admin"},
-
-elyza:{password:"1234"},
-eliza:{password:"1234"},
-ramy:{password:"1234"},
-joshua:{password:"1234"},
-jules:{password:"1234"}
-
-};
-
-document.getElementById("loginForm").addEventListener("submit",function(e){
-
-e.preventDefault();
-
-const user=document.getElementById("username").value.toLowerCase();
-const pass=document.getElementById("password").value;
-
-if(employees[user] && employees[user].password===pass){
-
-if(employees[user].role==="admin"){
-
-document.getElementById("login").style.display="none";
-document.getElementById("adminPanel").style.display="block";
-
-loadRequests();
-return;
-
+document.getElementById("offDate").addEventListener("input", function(){
+const d = new Date(this.value).getDay();
+if(d === 0 || d === 5 || d === 6){
+alert("Only Monday to Thursday allowed");
+this.value="";
 }
-
-document.getElementById("login").style.display="none";
-document.getElementById("portal").style.display="block";
-
-document.getElementById("employeeName").innerText=user;
-
-}else{
-
-document.getElementById("loginMessage").innerText="Invalid login";
-
-}
-
 });
 
-function logout(){
+window.submitRequest = async function(){
 
-document.getElementById("portal").style.display="none";
-document.getElementById("adminPanel").style.display="none";
-document.getElementById("login").style.display="block";
-
-}
-
-function openSchedule(){
-
-document.getElementById("scheduleViewer").style.display="flex";
-
-}
-
-function closeSchedule(){
-
-document.getElementById("scheduleViewer").style.display="none";
-
-}
-
-function openRequestForm(){
-
-document.getElementById("requestModal").style.display="flex";
-
-}
-
-function closeRequestForm(){
-
-document.getElementById("requestModal").style.display="none";
-
-}
-
-async function submitRequest(){
-
-const date=document.getElementById("offDate").value;
-const reason=document.getElementById("offReason").value;
-const user=document.getElementById("employeeName").innerText;
+const date = document.getElementById("offDate").value;
+const reason = document.getElementById("offReason").value;
+const user = document.getElementById("employeeName").innerText;
 
 if(!date || !reason){
-
-alert("Complete form");
+alert("Please complete the form");
 return;
-
 }
 
-const formData=new FormData();
+try{
 
-formData.append("name",user);
-formData.append("date",date);
-formData.append("reason",reason);
+const formData = new FormData();
+formData.append("name", user);
+formData.append("date", date);
+formData.append("reason", reason);
 
-await fetch(WEBAPP,{
+await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec",{
 method:"POST",
-body:formData
+body: formData
 });
 
-alert("Request sent!");
-
+alert("Request submitted successfully!");
 closeRequestForm();
+
+}catch(error){
+
+console.error(error);
+alert("Error sending request");
+
+}
 
 }
 
 async function loadRequests(){
 
-const table=document.getElementById("requestTable");
+const table = document.getElementById("requestTable");
 
-table.innerHTML=`<tr>
+table.innerHTML =
+`<tr>
 <th>Employee</th>
 <th>Date</th>
 <th>Reason</th>
-<th>Time</th>
+<th>Time Requested</th>
 <th>Status</th>
 </tr>`;
 
-const res=await fetch(WEBAPP);
+try{
 
-const data=await res.json();
+const res = await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec");
+const data = await res.json();
 
-data.forEach(r=>{
+data.forEach(r => {
 
-let row=table.insertRow();
+let row = table.insertRow();
 
-row.insertCell(0).innerText=r.name;
-row.insertCell(1).innerText=r.date;
-row.insertCell(2).innerText=r.reason;
-row.insertCell(3).innerText=new Date(r.time).toLocaleString();
-row.insertCell(4).innerText=r.status;
+row.insertCell(0).innerText = r.name;
+row.insertCell(1).innerText = r.date;
+row.insertCell(2).innerText = r.reason;
+row.insertCell(3).innerText = new Date(r.time).toLocaleString();
+row.insertCell(4).innerText = r.status;
 
 });
 
+}catch(err){
+console.log(err);
+}
 }
 
+
+window.markDone = function(index){
+let list = JSON.parse(localStorage.getItem("offRequests")) || [];
+
+list[index].done = true;
+
+localStorage.setItem("offRequests", JSON.stringify(list));
+
+loadRequests();
+}
+
+
+
+const employees = {
+admin:{password:'admin1234',role:'admin',irs:[]},
+elyza:{ password:'1234', irs:[]},
+eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+rachelle:{ password:'1234', irs:[] },
+ramy:{ password:'1234', irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+penales:{ password:'1234', irs:[] },
+joshua:{ password:'1234', irs:[] },
+ramos:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+jules:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+rulona:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+sitoy:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+dave:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+jm:{ password:'1234', irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+allan:{ password:'1234', irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning for Suspension'}]},
+valerie:{ password:'1234', irs:[
+{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'},
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}
+]},
+gerald:{ password:'1234', irs:[]},
+genalou:{ password:'1234', irs:[]},
+mark:{ password:'1234', irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+rico:{ password:'1234', irs:[{date:'January 26, 2026',incident:'Using of gadgets while on duty',status:'IR SERVED',note:'Warning for Suspension'}]},
+grace:{ password:'1234', irs:[]},
+jeanette:{ password:'1234', irs:[]},
+khevin:{ password:'1234', irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning for Suspension'}]},
+cm:{ password:'1234', irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]}
+};
+
+document.getElementById('loginForm').addEventListener('submit', function(e){
+e.preventDefault();
+const user = document.getElementById('username').value.trim().toLowerCase();
+const pass = document.getElementById('password').value;
+
+if (employees[user] && employees[user].password === pass) {
+
+if(employees[user].role === "admin"){
+document.getElementById('login').style.display = 'none';
+document.getElementById('adminPanel').style.display = 'block';
+loadRequests();
+return;
+}
+
+document.getElementById('login').style.display = 'none';
+document.getElementById('portal').style.display = 'block';
+
+document.getElementById('employeeName').innerText =
+user.charAt(0).toUpperCase() + user.slice(1);
+
+loadIR(user);
+}
+else {
+document.getElementById('loginMessage').innerText = 'Invalid username or password';
+}
+});
+
+function loadIR(user){
+const table = document.getElementById('irTable');
+table.innerHTML = '<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>';
+employees[user].irs.forEach(ir=>{
+const row = table.insertRow();
+row.insertCell(0).innerText = ir.date;
+row.insertCell(1).innerText = ir.incident;
+row.insertCell(2).innerText = ir.status;
+row.insertCell(3).innerText = ir.note;
+});
+}
+
+window.logout = function(){
+document.getElementById('portal').style.display='none';
+document.getElementById('adminPanel').style.display='none';
+document.getElementById('requestFormSection').style.display='none';
+
+document.getElementById('login').style.display='block';
+
+document.getElementById('username').value='';
+document.getElementById('password').value='';
+document.getElementById('loginMessage').innerText='';
+}
+
+
+window.changePassword = function(){
+const newPass = document.getElementById('newPassword').value;
+const user = document.getElementById('employeeName').innerText.toLowerCase();
+
+if(!newPass){
+alert('Enter a new password');
+return;
+}
+
+if(newPass === employees[user].password){
+alert('New password must be different from the old one');
+return;
+}
+
+employees[user].password = newPass;
+alert('Password updated successfully!');
+document.getElementById('newPassword').value = '';
+}
+window.openRequestForm = function(){
+document.getElementById('portal').style.display='none';
+document.getElementById('requestFormSection').style.display='block';
+}
+
+window.closeRequestForm = function(){
+document.getElementById('requestFormSection').style.display='none';
+document.getElementById('portal').style.display='block';
+}
+
+});
+</script>
+
+<!-- WOW.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script>
+new WOW().init();
 </script>
 
 </body>
