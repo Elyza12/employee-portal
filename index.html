@@ -167,35 +167,40 @@ document.addEventListener("DOMContentLoaded", function(){
 
  window.submitRequest = async function(){
 
- const date = document.getElementById("offDate").value;
- const reason = document.getElementById("offReason").value;
- const user = document.getElementById("employeeName").innerText;
+const date = document.getElementById("offDate").value;
+const reason = document.getElementById("offReason").value;
+const user = document.getElementById("employeeName").innerText;
 
- if(!date || !reason){
-  alert("Please complete the form");
-  return;
- }
+if(!date || !reason){
+alert("Please complete the form");
+return;
+}
 
- try{
+try{
 
- await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec",{
-  method:"POST",
-  body: JSON.stringify({
-   name:user,
-   date:date,
-   reason:reason
-  })
- });
+await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec",{
+method:"POST",
+mode:"no-cors",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+name:user,
+date:date,
+reason:reason
+})
+});
 
- alert("Request submitted!");
+alert("Request submitted successfully!");
 
- closeRequestForm();
+closeRequestForm();
 
- }catch(err){
+}catch(err){
 
- alert("Error sending request");
+console.log(err);
+alert("Error sending request");
 
- }
+}
 
 }
 
@@ -215,8 +220,8 @@ table.innerHTML =
 
 try{
 
-  const res = await fetch("https://script.google.com/macros/s/AKfycbxOxZzT1cdIKhD9Elpj4baKjk--rmRKRNU08GsY3EoQfLZO4YE_2opGdillQN95KyeI/exec?action=getRequests");
-const data = await res.json();  
+const res = await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec");
+const data = await res.json();
 
 data.forEach(r => {
 
@@ -368,6 +373,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
