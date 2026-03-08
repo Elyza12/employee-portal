@@ -6,19 +6,19 @@
 
 <style>
 
-body {
-font-family: Arial,sans-serif;
+body{
+font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#1b1b1b,#2a2a2a);
-color:#222;
 margin:0;
 padding:0;
+color:white;
 }
 
-header {
+header{
 background:#8b0000;
-color:white;
 padding:20px;
 text-align:center;
+font-size:28px;
 }
 
 .container{
@@ -33,7 +33,7 @@ background:rgba(0,0,0,0.7);
 padding:30px;
 margin:20px;
 border-radius:12px;
-width:250px;
+width:260px;
 text-align:center;
 box-shadow:0 0 15px rgba(0,0,0,0.5);
 transition:0.3s;
@@ -52,6 +52,7 @@ color:white;
 border-radius:6px;
 cursor:pointer;
 font-weight:bold;
+margin-top:10px;
 }
 
 button:hover{
@@ -75,7 +76,7 @@ background:white;
 color:black;
 padding:30px;
 border-radius:10px;
-width:300px;
+width:320px;
 }
 
 input,textarea{
@@ -111,41 +112,14 @@ flex-direction:column;
 align-items:center;
 }
 }
-<div id="scheduleViewer" style="
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-justify-content:center;
-align-items:center;
-z-index:1000;
-">
 
-<img src="sched.png" style="max-width:90%; max-height:90%; border-radius:10px;">
-
-<div style="
-position:absolute;
-top:20px;
-right:30px;
-color:white;
-font-size:30px;
-cursor:pointer;
-"
-onclick="closeSchedule()">
-✖
-</div>
-
-</div>
 </style>
 </head>
 
 <body>
 
 <header>
-🍖 Samgyupsal Employee Portal
+🍖 Awi Samgyupsal Employee Portal
 </header>
 
 <div class="container">
@@ -163,22 +137,52 @@ onclick="closeSchedule()">
 </div>
 
 <div class="card">
-<h3>Work Schedule</h3>
 
-<div style="text-align:center">
+<h3>📅 Work Schedule</h3>
 
-<img src="sched.png" 
-class="sched animate__animated animate__fadeIn"
-style="cursor:pointer; max-height:250px;"
+<img src="sched.png"
+style="cursor:pointer;width:100%;border-radius:8px;"
 onclick="openSchedule()">
 
-<p style="margin-top:8px; font-size:14px; color:#666;">
+<p style="font-size:13px;margin-top:8px;">
 Click schedule to enlarge
 </p>
+
+</div>
+
+</div>
+
+<!-- Schedule Viewer -->
+<div id="scheduleViewer" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+justify-content:center;
+align-items:center;
+z-index:1000;
+">
+
+<img src="sched.png" style="max-width:90%;max-height:90%;border-radius:10px;">
+
+<div style="
+position:absolute;
+top:20px;
+right:30px;
+color:white;
+font-size:30px;
+cursor:pointer;
+"
+onclick="closeSchedule()">
+✖
 </div>
 
 </div>
 
+<!-- Request Modal -->
 <div id="requestModal" class="modal">
 
 <div class="modal-content">
@@ -190,13 +194,12 @@ Click schedule to enlarge
 <textarea id="offReason" placeholder="Reason"></textarea>
 
 <button onclick="submitRequest()">Submit</button>
-
 <button onclick="closeRequestForm()">Close</button>
 
 </div>
-
 </div>
 
+<!-- Admin Table -->
 <table id="requestTable">
 
 <tr>
@@ -213,13 +216,18 @@ Click schedule to enlarge
 
 const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 
-  window.openSchedule = function(){
+/* Schedule Viewer */
+
+function openSchedule(){
 document.getElementById("scheduleViewer").style.display="flex";
 }
 
-window.closeSchedule = function(){
+function closeSchedule(){
 document.getElementById("scheduleViewer").style.display="none";
 }
+
+/* Request Modal */
+
 function openRequestForm(){
 document.getElementById("requestModal").style.display="flex";
 }
@@ -228,12 +236,14 @@ function closeRequestForm(){
 document.getElementById("requestModal").style.display="none";
 }
 
+/* Submit Request */
+
 async function submitRequest(){
 
 const date=document.getElementById("offDate").value;
 const reason=document.getElementById("offReason").value;
 
-if(!date||!reason){
+if(!date || !reason){
 alert("Please complete the form");
 return;
 }
@@ -254,11 +264,15 @@ alert("Request submitted!");
 closeRequestForm();
 
 }catch(err){
+
 console.log(err);
 alert("Error sending request");
+
 }
 
 }
+
+/* Load Requests */
 
 async function loadRequests(){
 
@@ -300,6 +314,3 @@ console.log(err);
 
 </body>
 </html>
-
-
-
