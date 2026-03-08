@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function(){
  }
 });
 
- window.submitRequest = async function(){
+  window.submitRequest = async function(){
 
 const date = document.getElementById("offDate").value;
 const reason = document.getElementById("offReason").value;
@@ -178,9 +178,8 @@ return;
 
 try{
 
-await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec",{
+const response = await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec",{
 method:"POST",
-mode:"no-cors",
 headers:{
 "Content-Type":"application/json"
 },
@@ -195,16 +194,15 @@ alert("Request submitted successfully!");
 
 closeRequestForm();
 
-}catch(err){
+}catch(error){
 
-console.log(err);
+console.error(error);
 alert("Error sending request");
 
 }
 
 }
-
-
+  
 async function loadRequests(){
 
 const table = document.getElementById("requestTable");
@@ -373,6 +371,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
