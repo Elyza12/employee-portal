@@ -249,10 +249,16 @@ document.addEventListener("DOMContentLoaded", function(){
           <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
         </tr>`;
       data.forEach(req=>{
-        const row = document.createElement("tr");
-        row.innerHTML = `
+  const row = document.createElement("tr");
+  row.innerHTML = `
 <td>${req.name}</td>
-<td>${req.date}</td>
+<td>${
+  new Date(req.date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}</td>
 <td>${req.reason}</td>
 <td>${new Date(req.time).toLocaleString('en-US',{
   year:'numeric', month:'long', day:'numeric',
@@ -268,8 +274,8 @@ document.addEventListener("DOMContentLoaded", function(){
     <button onclick="approve(${req.row})">Approve</button>
     <button onclick="reject(${req.row})">Reject</button>`:''
 }</td>`;
-        table.appendChild(row);
-      });
+  table.appendChild(row);
+});
     });
   }
 
@@ -378,3 +384,4 @@ document.addEventListener("DOMContentLoaded", function(){
 <script>new WOW().init();</script>
 </body>
 </html>
+
