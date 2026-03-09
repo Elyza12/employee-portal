@@ -242,6 +242,37 @@ Awi Employee Portal
 
 
 <script>
+  const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
+
+
+function approve(row){
+
+fetch(WEBAPP + "?row=" + row + "&status=Approved")
+.then(res => res.text())
+.then(() => {
+
+alert("Request Approved");
+
+loadRequests();
+
+});
+
+}
+
+
+function reject(row){
+
+fetch(WEBAPP + "?row=" + row + "&status=Rejected")
+.then(res => res.text())
+.then(() => {
+
+alert("Request Rejected");
+
+loadRequests();
+
+});
+
+}
 document.addEventListener("DOMContentLoaded", function(){
 document.getElementById('login').style.display = 'block';
 
@@ -288,39 +319,38 @@ alert("Error sending request");
 
 }
 
-async function loadRequests(){
+function loadRequests(){
 
-const table = document.getElementById("requestTable");
+fetch(WEBAPP)
+.then(res => res.json())
+.then(data => {
 
-table.innerHTML =
-`<tr>
-<th>Employee</th>
-<th>Date</th>
-<th>Reason</th>
-<th>Time Requested</th>
-<th>Status</th>
-</tr>`;
+let table = document.getElementById("requestTable");
 
-try{
+table.innerHTML="";
 
-const res = await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec");
-const data = await res.json();
+data.forEach(req => {
 
-data.forEach(r => {
+let row = document.createElement("tr");
 
-let row = table.insertRow();
+row.innerHTML = `
+<td>${req.name}</td>
+<td>${req.date}</td>
+<td>${req.reason}</td>
+<td>${req.status}</td>
 
-row.insertCell(0).innerText = r.name;
-row.insertCell(1).innerText = r.date;
-row.insertCell(2).innerText = r.reason;
-row.insertCell(3).innerText = new Date(r.time).toLocaleString();
-row.insertCell(4).innerText = r.status;
+<td>
+<button onclick="approve(${req.row})">Approve</button>
+<button onclick="reject(${req.row})">Reject</button>
+</td>
+`;
+
+table.appendChild(row);
 
 });
 
-}catch(err){
-console.log(err);
-}
+});
+
 }
 
 
@@ -456,4 +486,5 @@ new WOW().init();
 
 </body>
 </html>
+
 
