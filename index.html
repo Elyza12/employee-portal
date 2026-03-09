@@ -9,82 +9,170 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
-/* ===== Modern UI Animations & Transitions ===== */
 
-.fade-up {
-opacity: 0;
-transform: translateY(20px);
-animation: fadeUp 0.8s ease forwards;
-}
-@keyframes fadeUp {
-to {
-opacity: 1;
-transform: translateY(0);
-}
+/* ===== GLOBAL ===== */
+
+body{
+margin:0;
+font-family:'Segoe UI',Arial,sans-serif;
+background:linear-gradient(135deg,#1b1b1b,#2b2b2b);
+color:#333;
 }
 
-button {
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-button:hover {
-transform: translateY(-3px);
-box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+/* ===== HEADER ===== */
+
+header{
+background:#8b0000;
+color:white;
+padding:22px;
+text-align:center;
+font-size:28px;
+letter-spacing:2px;
+box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
 
-input:focus {
-outline: none;
-border-color: #336699;
-box-shadow: 0 0 8px rgba(51, 102, 153, 0.25);
-}
+/* ===== SECTIONS ===== */
 
-#irTable tr:hover td {
-background: #eef5fc;
-transition: background 0.2s ease;
-}
-
-.animate-fade-in {
-opacity: 0;
-animation: fadeInCustom 0.8s ease forwards;
-}
-@keyframes fadeInCustom {
-to { opacity: 1; }
-}
-
-/* ===== ORIGINAL STYLES (UNCHANGED) ===== */
-section { display:none; padding:20px; max-width:900px; margin:20px auto; background:white; border-radius:8px; box-shadow:0 0 10px #ccc; }
-body { font-family: Arial,sans-serif; background:#f4f4f4; margin:0; padding:0; }
-header { background:#0077cc; color:white; padding:20px; text-align:center; }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th, td { border:1px solid #ddd; padding:10px; text-align:left; }
-th { background:#0077cc; color:white; }
-td { background:#f9f9f9; }
-input { width:100%; padding:10px; margin:5px 0; box-sizing:border-box; }
-button { background:#0077cc; color:white; border:none; padding:12px; cursor:pointer; width:100%; margin-top:10px; border-radius:5px; font-size:16px; }
-button:hover { background:#005fa3; }
-img.sched { width:100%; max-width:1000px; border:1px solid #ccc; border-radius:8px; margin-top:10px; }
-#login {
-display: block;
-}
-#portal{
-display: none;
-}
-#login form{
-opacity: 0;
-transform: scale(0.92) translateY(20px);
-animation: mobileZoomIn 0.6s ease-out forwards;
-}
-@keyframes mobileZoomIn{
-to{
-opacity: 1;
-transform: scale(1) translateY(0);
-}
-}
-.animate__zoomIn {
-animation: none; !important;
-}
-#requestFormSection, #adminPanel{
+section{
 display:none;
+padding:25px;
+max-width:900px;
+margin:40px auto;
+background:white;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+animation:fadeUp 0.6s ease;
 }
+
+#login{
+display:block;
+max-width:420px;
+}
+
+/* ===== ANIMATION ===== */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* ===== INPUTS ===== */
+
+input, textarea{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+transition:0.25s;
+}
+
+input:focus, textarea:focus{
+outline:none;
+border-color:#8b0000;
+box-shadow:0 0 6px rgba(139,0,0,0.3);
+}
+
+/* ===== BUTTON ===== */
+
+button{
+background:#b22222;
+color:white;
+border:none;
+padding:12px;
+cursor:pointer;
+width:100%;
+border-radius:6px;
+font-size:15px;
+font-weight:bold;
+transition:0.25s;
+}
+
+button:hover{
+background:#8b0000;
+transform:translateY(-2px);
+box-shadow:0 5px 12px rgba(0,0,0,0.3);
+}
+
+/* ===== TABLE ===== */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+border-radius:8px;
+overflow:hidden;
+}
+
+th{
+background:#8b0000;
+color:white;
+padding:12px;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
+tr:hover td{
+background:#f7f7f7;
+}
+
+/* ===== SCHEDULE IMAGE ===== */
+
+img.sched{
+width:100%;
+max-width:1000px;
+border-radius:10px;
+border:1px solid #ddd;
+margin-top:10px;
+cursor:pointer;
+transition:0.25s;
+}
+
+img.sched:hover{
+transform:scale(1.02);
+box-shadow:0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* ===== LOGIN ANIMATION ===== */
+
+#login form{
+opacity:0;
+transform:scale(0.9);
+animation:loginZoom 0.6s forwards;
+}
+
+@keyframes loginZoom{
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:768px){
+
+section{
+margin:20px;
+padding:20px;
+}
+
+header{
+font-size:22px;
+}
+
+}
+
 </style>
 </head>
 
@@ -368,3 +456,4 @@ new WOW().init();
 
 </body>
 </html>
+
