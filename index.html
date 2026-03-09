@@ -287,32 +287,41 @@ this.value="";
 });
 
 
-async function submitRequest(){
+async function submitRequest() {
+  const date = document.getElementById("offDate").value;
+  const reason = document.getElementById("offReason").value;
 
-const date=document.getElementById("offDate").value;
-const reason=document.getElementById("offReason").value;
+  if (!date || !reason) {
+    alert("Please complete the form");
+    return;
+  }
 
-if(!date || !reason){
+  const payload = {
+    name: currentUser,
+    date: date,
+    reason: reason
+  };
 
-alert("Please complete the form");
-return;
+  try {
+    const res = await fetch(WEBAPP, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
+    if (res.ok) {
+      alert("Request sent!");
+      document.getElementById("offDate").value = "";
+      document.getElementById("offReason").value = "";
+      closeRequestForm();
+    } else {
+      throw new Error("Network response was not OK");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error sending request");
+  }
 }
-
-const formData=new FormData();
-
-formData.append("name",currentUser);
-formData.append("date",date);
-formData.append("reason",reason);
-
-await fetch(WEBAPP,{method:"POST",body:formData});
-
-alert("Request sent");
-
-closeRequestForm();
-
-}
-
 
 function loadRequests(){
 
@@ -410,3 +419,4 @@ document.getElementById("login").style.display="block";
 
 </body>
 </html>
+
