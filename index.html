@@ -9,6 +9,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
+  .status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
+
+.status-rejected {
+  color: red;
+  font-weight: bold;
+}
 /* ===== GLOBAL ===== */
 body{
   margin:0;
@@ -299,11 +313,11 @@ document.addEventListener("DOMContentLoaded", function(){
         <td>${req.date}</td>
         <td>${req.reason}</td>
         <td>${new Date(req.time).toLocaleString()}</td>
-        <td>${req.status}</td>
-        <td>
-          <button onclick="approve(${req.row})">Approve</button>
-          <button onclick="reject(${req.row})">Reject</button>
-        </td>
+       <td class="${
+        req.status.toLowerCase() === 'pending' ? 'status-pending' :
+        req.status.toLowerCase() === 'approved' ? 'status-approved' :
+        req.status.toLowerCase() === 'rejected' ? 'status-rejected' : ''
+        }">${req.status}</td>
         `;
         table.appendChild(row);
       });
@@ -410,3 +424,4 @@ new WOW().init();
 
 </body>
 </html>
+
