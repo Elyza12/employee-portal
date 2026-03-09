@@ -9,6 +9,40 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
+.status-pending{
+  background:#fff3cd;
+  color:#856404;
+  font-weight:bold;
+}
+
+.status-approved{
+  background:#d4edda;
+  color:#155724;
+  font-weight:bold;
+}
+.status-rejected{
+  background:#f8d7da;
+  color:#721c24;
+  font-weight:bold;
+}
+button{
+  padding:6px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+button:hover{
+  opacity:0.85;
+}
+approve-btn{
+  background:#28a745;
+  color:white;
+}
+reject-btn{
+  background:#dc3545;
+  color:white;
+}
 /* ===== STATUS COLORS ===== */
 .status-pending { color: orange; font-weight: bold; }
 .status-approved { color: green; font-weight: bold; }
@@ -199,15 +233,20 @@ img.sched:hover{
 const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 
 // APPROVE / REJECT
-function approve(row){
-  fetch(`${WEBAPP}?row=${row}&status=Approved`)
-  .then(res=>res.text())
-  .then(()=>{ alert("Request Approved"); loadRequests(); });
-}
 function reject(row){
-  fetch(`${WEBAPP}?row=${row}&status=Rejected`)
+  if(!confirm("Reject this request?")) return;
+
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"reject",
+      row:row
+    })
+  })
   .then(res=>res.text())
-  .then(()=>{ alert("Request Rejected"); loadRequests(); });
+  .then(()=>{
+    loadRequest();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -225,7 +264,11 @@ document.addEventListener("DOMContentLoaded", function(){
     const reason = document.getElementById("offReason").value;
     const user = document.getElementById("employeeName").innerText;
     if(!date || !reason){ alert("Please complete the form"); return; }
-
+    .then(()=>{
+    alert("Request sent!");
+    document.getElementById("date").value="";
+    document.getElemenrById("reason").value="";
+  })
     try{
       const formData = new FormData();
       formData.append("name", user);
@@ -384,4 +427,5 @@ document.addEventListener("DOMContentLoaded", function(){
 <script>new WOW().init();</script>
 </body>
 </html>
+
 
