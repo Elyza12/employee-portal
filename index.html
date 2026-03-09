@@ -266,12 +266,19 @@ function loadRequests(){
 
 // --- APPROVE / REJECT ---
 function approve(row){
-  fetch(WEBAPP,{method:"POST",body:JSON.stringify({action:"approve",row:row}),headers:{"Content-Type":"application/json"}})
-  .then(()=>loadRequests());
+  fetch(WEBAPP,{
+    method:"POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({action:"approve", row:row})
+  }).then(()=>loadRequests());
 }
+
 function reject(row){
-  fetch(WEBAPP,{method:"POST",body:JSON.stringify({action:"reject",row:row}),headers:{"Content-Type":"application/json"}})
-  .then(()=>loadRequests());
+  fetch(WEBAPP,{
+    method:"POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({action:"reject", row:row})
+  }).then(()=>loadRequests());
 }
 
 // --- NAVIGATION ---
@@ -282,3 +289,4 @@ function logout(){ document.getElementById("portal").style.display="none"; docum
 </script>
 </body>
 </html>
+
