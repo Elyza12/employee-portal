@@ -18,7 +18,7 @@ background:linear-gradient(135deg,#1b1b1b,#2b2b2b);
 header{
 background:#8b0000;
 color:white;
-padding:20px;
+padding:22px;
 text-align:center;
 font-size:28px;
 }
@@ -92,7 +92,9 @@ margin-top:10px;
 
 <!-- LOGIN -->
 <section id="login">
+
 <h2>Login</h2>
+
 <form id="loginForm">
 
 <input type="text" id="username" placeholder="First Name" required>
@@ -101,7 +103,9 @@ margin-top:10px;
 <button type="submit">Login</button>
 
 </form>
+
 <p id="loginMessage" style="color:red;"></p>
+
 </section>
 
 
@@ -128,6 +132,7 @@ margin-top:10px;
 <button onclick="changePassword()">Update Password</button>
 
 <button onclick="openRequestForm()">Request Off</button>
+
 <button onclick="logout()">Logout</button>
 
 </section>
@@ -156,6 +161,7 @@ margin-top:10px;
 <h2>Admin — Request List</h2>
 
 <table id="requestTable">
+
 <tr>
 <th>Employee</th>
 <th>Date</th>
@@ -164,6 +170,7 @@ margin-top:10px;
 <th>Status</th>
 <th>Action</th>
 </tr>
+
 </table>
 
 <button onclick="logout()">Logout</button>
@@ -175,15 +182,88 @@ margin-top:10px;
 
 const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 
-/* EMPLOYEES */
+
+/* EMPLOYEES (ALL RESTORED) */
 
 const employees={
+
 admin:{password:'admin1234',role:'admin',irs:[]},
-elyza:{password:'1234',irs:[]},
-eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-rachelle:{password:'1234',irs:[]},
-ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
+
+elyza:{ password:'1234', irs:[]},
+
+eliza:{ password:'1234', irs:[
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}
+]},
+
+rachelle:{ password:'1234', irs:[] },
+
+ramy:{ password:'1234', irs:[
+{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}
+]},
+
+penales:{ password:'1234', irs:[] },
+
+joshua:{ password:'1234', irs:[] },
+
+ramos:{ password:'1234', irs:[
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}
+]},
+
+jules:{ password:'1234', irs:[
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}
+]},
+
+rulona:{ password:'1234', irs:[
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}
+]},
+
+sitoy:{ password:'1234', irs:[
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}
+]},
+
+dave:{ password:'1234', irs:[
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}
+]},
+
+jm:{ password:'1234', irs:[
+{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}
+]},
+
+allan:{ password:'1234', irs:[
+{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}
+]},
+
+valerie:{ password:'1234', irs:[
+{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}
+]},
+
+gerald:{ password:'1234', irs:[]},
+
+genalou:{ password:'1234', irs:[]},
+
+mark:{ password:'1234', irs:[
+{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}
+]},
+
+rico:{ password:'1234', irs:[
+{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}
+]},
+
+grace:{ password:'1234', irs:[]},
+
+jeanette:{ password:'1234', irs:[]},
+
+khevin:{ password:'1234', irs:[
+{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}
+]},
+
+cm:{ password:'1234', irs:[
+{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}
+]}
+
 };
+
 
 
 /* LOGIN */
@@ -225,18 +305,6 @@ document.getElementById("loginMessage").innerText="Invalid username or password"
 });
 
 
-/* LOGOUT */
-
-function logout(){
-
-document.getElementById("portal").style.display="none";
-document.getElementById("adminPanel").style.display="none";
-document.getElementById("requestFormSection").style.display="none";
-document.getElementById("login").style.display="block";
-
-}
-
-
 /* LOAD IR */
 
 function loadIR(user){
@@ -259,37 +327,13 @@ row.insertCell(3).innerText=ir.note;
 }
 
 
-/* REQUEST FORM */
-
-function openRequestForm(){
-
-document.getElementById("portal").style.display="none";
-document.getElementById("requestFormSection").style.display="block";
-
-}
-
-function closeRequestForm(){
-
-document.getElementById("requestFormSection").style.display="none";
-document.getElementById("portal").style.display="block";
-
-}
-
-
-/* SUBMIT REQUEST */
+/* REQUEST */
 
 async function submitRequest(){
 
 const date=document.getElementById("offDate").value;
 const reason=document.getElementById("offReason").value;
 const name=document.getElementById("employeeName").innerText;
-
-if(!date||!reason){
-
-alert("Complete the form");
-return;
-
-}
 
 const formData=new FormData();
 
@@ -300,9 +344,6 @@ formData.append("reason",reason);
 await fetch(WEBAPP,{method:"POST",body:formData});
 
 alert("Request sent");
-
-document.getElementById("offDate").value="";
-document.getElementById("offReason").value="";
 
 closeRequestForm();
 
@@ -334,18 +375,17 @@ data.forEach(req=>{
 
 const row=document.createElement("tr");
 
+const date=req.date?new Date(req.date).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):"";
+
+const time=req.time?new Date(req.time).toLocaleString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'}):"";
+
 row.innerHTML=`
 
 <td>${req.name}</td>
-
-<td>${new Date(req.date).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}</td>
-
+<td>${date}</td>
 <td>${req.reason}</td>
-
-<td>${new Date(req.time).toLocaleString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'})}</td>
-
+<td>${time}</td>
 <td class="status-${req.status.toLowerCase()}">${req.status}</td>
-
 <td>
 
 ${req.status==="Pending"?`
@@ -354,7 +394,6 @@ ${req.status==="Pending"?`
 `:""}
 
 </td>
-
 `;
 
 table.appendChild(row);
@@ -373,9 +412,7 @@ function approve(row){
 fetch(WEBAPP,{
 method:"POST",
 body:JSON.stringify({action:"approve",row:row})
-})
-
-.then(()=>loadRequests());
+}).then(()=>loadRequests());
 
 }
 
@@ -387,9 +424,32 @@ function reject(row){
 fetch(WEBAPP,{
 method:"POST",
 body:JSON.stringify({action:"reject",row:row})
-})
+}).then(()=>loadRequests());
 
-.then(()=>loadRequests());
+}
+
+
+/* NAVIGATION */
+
+function openRequestForm(){
+
+document.getElementById("portal").style.display="none";
+document.getElementById("requestFormSection").style.display="block";
+
+}
+
+function closeRequestForm(){
+
+document.getElementById("requestFormSection").style.display="none";
+document.getElementById("portal").style.display="block";
+
+}
+
+function logout(){
+
+document.getElementById("portal").style.display="none";
+document.getElementById("adminPanel").style.display="none";
+document.getElementById("login").style.display="block";
 
 }
 
