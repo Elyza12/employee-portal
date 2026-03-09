@@ -9,18 +9,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
-
 /* ===== GLOBAL ===== */
-
 body{
 margin:0;
 font-family:'Segoe UI',Arial,sans-serif;
 background:linear-gradient(135deg,#1b1b1b,#2b2b2b);
 color:#333;
 }
-
 /* ===== HEADER ===== */
-
 header{
 background:#8b0000;
 color:white;
@@ -30,9 +26,7 @@ font-size:28px;
 letter-spacing:2px;
 box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
-
 /* ===== SECTIONS ===== */
-
 section{
 display:none;
 padding:25px;
@@ -43,14 +37,11 @@ border-radius:12px;
 box-shadow:0 10px 30px rgba(0,0,0,0.25);
 animation:fadeUp 0.6s ease;
 }
-
 #login{
 display:block;
 max-width:420px;
 }
-
 /* ===== ANIMATION ===== */
-
 @keyframes fadeUp{
 from{
 opacity:0;
@@ -61,9 +52,7 @@ opacity:1;
 transform:translateY(0);
 }
 }
-
 /* ===== INPUTS ===== */
-
 input, textarea{
 width:100%;
 padding:12px;
@@ -73,15 +62,12 @@ border:1px solid #ccc;
 font-size:14px;
 transition:0.25s;
 }
-
 input:focus, textarea:focus{
 outline:none;
 border-color:#8b0000;
 box-shadow:0 0 6px rgba(139,0,0,0.3);
 }
-
 /* ===== BUTTON ===== */
-
 button{
 background:#b22222;
 color:white;
@@ -94,15 +80,12 @@ font-size:15px;
 font-weight:bold;
 transition:0.25s;
 }
-
 button:hover{
 background:#8b0000;
 transform:translateY(-2px);
 box-shadow:0 5px 12px rgba(0,0,0,0.3);
 }
-
 /* ===== TABLE ===== */
-
 table{
 width:100%;
 border-collapse:collapse;
@@ -110,24 +93,19 @@ margin-top:15px;
 border-radius:8px;
 overflow:hidden;
 }
-
 th{
 background:#8b0000;
 color:white;
 padding:12px;
 }
-
 td{
 padding:12px;
 border-bottom:1px solid #eee;
 }
-
 tr:hover td{
 background:#f7f7f7;
 }
-
 /* ===== SCHEDULE IMAGE ===== */
-
 img.sched{
 width:100%;
 max-width:1000px;
@@ -137,42 +115,32 @@ margin-top:10px;
 cursor:pointer;
 transition:0.25s;
 }
-
 img.sched:hover{
 transform:scale(1.02);
 box-shadow:0 6px 20px rgba(0,0,0,0.2);
 }
-
 /* ===== LOGIN ANIMATION ===== */
-
 #login form{
 opacity:0;
 transform:scale(0.9);
 animation:loginZoom 0.6s forwards;
 }
-
 @keyframes loginZoom{
 to{
 opacity:1;
 transform:scale(1);
 }
 }
-
 /* ===== MOBILE ===== */
-
 @media(max-width:768px){
-
 section{
 margin:20px;
 padding:20px;
 }
-
 header{
 font-size:22px;
 }
-
 }
-
 </style>
 </head>
 
@@ -241,39 +209,27 @@ Awi Employee Portal
 <button onclick="logout()">Logout</button>
 </section>
 
-
 <script>
-  const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
-
+const WEBAPP = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
 function approve(row){
-
 fetch(WEBAPP + "?row=" + row + "&status=Approved")
 .then(res => res.text())
 .then(() => {
-
 alert("Request Approved");
-
 loadRequests();
-
 });
-
 }
 
-
 function reject(row){
-
 fetch(WEBAPP + "?row=" + row + "&status=Rejected")
 .then(res => res.text())
 .then(() => {
-
 alert("Request Rejected");
-
 loadRequests();
-
 });
-
 }
+
 document.addEventListener("DOMContentLoaded", function(){
 document.getElementById('login').style.display = 'block';
 
@@ -286,7 +242,6 @@ this.value="";
 });
 
 window.submitRequest = async function(){
-
 const date = document.getElementById("offDate").value;
 const reason = document.getElementById("offReason").value;
 const user = document.getElementById("employeeName").innerText;
@@ -297,13 +252,12 @@ return;
 }
 
 try{
-
 const formData = new FormData();
 formData.append("name", user);
 formData.append("date", date);
 formData.append("reason", reason);
 
-await fetch("https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec",{
+await fetch(WEBAPP,{
 method:"POST",
 body: formData
 });
@@ -312,22 +266,16 @@ alert("Request submitted successfully!");
 closeRequestForm();
 
 }catch(error){
-
 console.error(error);
 alert("Error sending request");
-
 }
-
 }
 
 function loadRequests(){
-
 fetch(WEBAPP)
 .then(res => res.json())
 .then(data => {
-
 let table = document.getElementById("requestTable");
-
 table.innerHTML = `
 <tr>
 <th>Employee</th>
@@ -338,11 +286,8 @@ table.innerHTML = `
 <th>Action</th>
 </tr>
 `;
-
 data.forEach(req => {
-
 let row = document.createElement("tr");
-
 row.innerHTML = `
 <td>${req.name}</td>
 <td>${req.date}</td>
@@ -354,27 +299,10 @@ row.innerHTML = `
 <button onclick="reject(${req.row})">Reject</button>
 </td>
 `;
-
 table.appendChild(row);
-
 });
-
 });
-
 }
-
-
-window.markDone = function(index){
-let list = JSON.parse(localStorage.getItem("offRequests")) || [];
-
-list[index].done = true;
-
-localStorage.setItem("offRequests", JSON.stringify(list));
-
-loadRequests();
-}
-
-
 
 const employees = {
 admin:{password:'admin1234',role:'admin',irs:[]},
@@ -411,25 +339,17 @@ const user = document.getElementById('username').value.trim().toLowerCase();
 const pass = document.getElementById('password').value;
 
 if (employees[user] && employees[user].password === pass) {
-
 if(employees[user].role === "admin"){
 document.getElementById('login').style.display = 'none';
 document.getElementById('adminPanel').style.display = 'block';
-
 loadRequests();
-
-// refresh every 2 seconds
-setInterval(loadRequests,2000);
-
+setInterval(loadRequests,2000); // refresh every 2 seconds
 return;
 }
-
 document.getElementById('login').style.display = 'none';
 document.getElementById('portal').style.display = 'block';
-
 document.getElementById('employeeName').innerText =
 user.charAt(0).toUpperCase() + user.slice(1);
-
 loadIR(user);
 }
 else {
@@ -453,29 +373,23 @@ window.logout = function(){
 document.getElementById('portal').style.display='none';
 document.getElementById('adminPanel').style.display='none';
 document.getElementById('requestFormSection').style.display='none';
-
 document.getElementById('login').style.display='block';
-
 document.getElementById('username').value='';
 document.getElementById('password').value='';
 document.getElementById('loginMessage').innerText='';
 }
 
-
 window.changePassword = function(){
 const newPass = document.getElementById('newPassword').value;
 const user = document.getElementById('employeeName').innerText.toLowerCase();
-
 if(!newPass){
 alert('Enter a new password');
 return;
 }
-
 if(newPass === employees[user].password){
 alert('New password must be different from the old one');
 return;
 }
-
 employees[user].password = newPass;
 alert('Password updated successfully!');
 document.getElementById('newPassword').value = '';
@@ -484,13 +398,10 @@ window.openRequestForm = function(){
 document.getElementById('portal').style.display='none';
 document.getElementById('requestFormSection').style.display='block';
 }
-
 window.closeRequestForm = function(){
 document.getElementById('requestFormSection').style.display='none';
 document.getElementById('portal').style.display='block';
 }
-
-});
 </script>
 
 <!-- WOW.js -->
@@ -501,7 +412,3 @@ new WOW().init();
 
 </body>
 </html>
-
-
-
-
