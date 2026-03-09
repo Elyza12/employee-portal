@@ -331,21 +331,37 @@ row.insertCell(3).innerText=ir.note;
 
 async function submitRequest(){
 
-const date=document.getElementById("offDate").value;
-const reason=document.getElementById("offReason").value;
-const name=document.getElementById("employeeName").innerText;
+const date = document.getElementById("offDate").value;
+const reason = document.getElementById("offReason").value;
+const name = document.getElementById("employeeName").innerText;
 
-const formData=new FormData();
+if(!date || !reason){
+  alert("Please complete the form");
+  return;
+}
 
-formData.append("name",name);
-formData.append("date",date);
-formData.append("reason",reason);
+const url = WEBAPP +
+"?name=" + encodeURIComponent(name) +
+"&date=" + encodeURIComponent(date) +
+"&reason=" + encodeURIComponent(reason);
 
-await fetch(WEBAPP,{method:"POST",body:formData});
+try{
 
-alert("Request sent");
+await fetch(url,{method:"POST"});
+
+alert("Request submitted successfully!");
+
+document.getElementById("offDate").value="";
+document.getElementById("offReason").value="";
 
 closeRequestForm();
+
+}catch(error){
+
+alert("Error sending request");
+console.log(error);
+
+}
 
 }
 
@@ -457,3 +473,4 @@ document.getElementById("login").style.display="block";
 
 </body>
 </html>
+
