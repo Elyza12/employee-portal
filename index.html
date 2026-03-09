@@ -9,20 +9,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
-  .status-pending {
-  color: orange;
-  font-weight: bold;
-}
+/* ===== STATUS COLORS ===== */
+.status-pending { color: orange; font-weight: bold; }
+.status-approved { color: green; font-weight: bold; }
+.status-rejected { color: red; font-weight: bold; }
 
-.status-approved {
-  color: green;
-  font-weight: bold;
-}
-
-.status-rejected {
-  color: red;
-  font-weight: bold;
-}
 /* ===== GLOBAL ===== */
 body{
   margin:0;
@@ -54,10 +45,7 @@ section{
   animation:fadeUp 0.6s ease;
 }
 
-#login{
-  display:block;
-  max-width:420px;
-}
+#login{ display:block; max-width:420px; }
 
 /* ===== ANIMATION ===== */
 @keyframes fadeUp{
@@ -122,9 +110,7 @@ td{
   border-bottom:1px solid #eee;
 }
 
-tr:hover td{
-  background:#f7f7f7;
-}
+tr:hover td{ background:#f7f7f7; }
 
 /* ===== SCHEDULE IMAGE ===== */
 img.sched{
@@ -149,27 +135,18 @@ img.sched:hover{
   animation:loginZoom 0.6s forwards;
 }
 
-@keyframes loginZoom{
-  to{opacity:1;transform:scale(1);}
-}
+@keyframes loginZoom{ to{opacity:1;transform:scale(1);} }
 
 /* ===== MOBILE ===== */
 @media(max-width:768px){
-  section{
-    margin:20px;
-    padding:20px;
-  }
-  header{
-    font-size:22px;
-  }
+  section{ margin:20px; padding:20px; }
+  header{ font-size:22px; }
 }
 </style>
 </head>
 
 <body>
-<header class="animate__animated animate__fadeInDown">
-Awi Employee Portal
-</header>
+<header class="animate__animated animate__fadeInDown">Awi Employee Portal</header>
 
 <!-- LOGIN SECTION -->
 <section id="login" class="animate__animated animate__zoomIn">
@@ -185,19 +162,15 @@ Awi Employee Portal
 <!-- EMPLOYEE PORTAL -->
 <section id="portal">
 <h2>Welcome, <span id="employeeName"></span></h2>
-
 <h3>Work Schedule</h3>
 <img src="sched.png" alt="Sched" class="sched animate__animated animate__fadeIn">
-
 <h3>Incident Reports</h3>
 <table id="irTable">
 <tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>
 </table>
 <p><em>Note: All IRs are renewed after 6 months from the incident date.</em></p>
-
 <input type="password" id="newPassword" placeholder="New Password">
 <button onclick="changePassword()">Update Password</button>
-
 <button onclick="openRequestForm()">Request Off</button>
 <button style="margin-top:20px;" onclick="logout()">Logout</button>
 </section>
@@ -209,7 +182,6 @@ Awi Employee Portal
 <input type="date" id="offDate">
 <label>Reason</label>
 <textarea id="offReason" style="width:100%; padding:10px;"></textarea>
-
 <button onclick="submitRequest()">Submit Request</button>
 <button onclick="closeRequestForm()">Cancel</button>
 </section>
@@ -231,24 +203,18 @@ Awi Employee Portal
 </section>
 
 <script>
-const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
+const WEBAPP = "https://script.google.com/macros/s/YOUR_WEBAPP_ID/exec"; // replace with your URL
 
 // APPROVE / REJECT
 function approve(row){
   fetch(WEBAPP + "?row=" + row + "&status=Approved")
   .then(res => res.text())
-  .then(() => {
-    alert("Request Approved");
-    loadRequests();
-  });
+  .then(()=>{ alert("Request Approved"); loadRequests(); });
 }
 function reject(row){
   fetch(WEBAPP + "?row=" + row + "&status=Rejected")
   .then(res => res.text())
-  .then(() => {
-    alert("Request Rejected");
-    loadRequests();
-  });
+  .then(()=>{ alert("Request Rejected"); loadRequests(); });
 }
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -256,69 +222,49 @@ document.addEventListener("DOMContentLoaded", function(){
 
   document.getElementById("offDate").addEventListener("input", function(){
     const d = new Date(this.value).getDay();
-    if(d === 0 || d === 5 || d === 6){
-      alert("Only Monday to Thursday allowed");
-      this.value="";
-    }
+    if(d===0||d===5||d===6){ alert("Only Monday to Thursday allowed"); this.value=""; }
   });
 
-  // SUBMIT DAY OFF REQUEST
+  // SUBMIT DAY OFF
   window.submitRequest = async function(){
-    const date = document.getElementById("offDate").value;
-    const reason = document.getElementById("offReason").value;
-    const user = document.getElementById("employeeName").innerText;
-    if(!date || !reason){
-      alert("Please complete the form");
-      return;
-    }
+    const date=document.getElementById("offDate").value;
+    const reason=document.getElementById("offReason").value;
+    const user=document.getElementById("employeeName").innerText;
+    if(!date||!reason){ alert("Please complete the form"); return; }
     try{
       const formData = new FormData();
       formData.append("name", user);
       formData.append("date", date);
       formData.append("reason", reason);
-
-      await fetch(WEBAPP,{
-        method:"POST",
-        body: formData
-      });
-
-      alert("Request submitted successfully!");
-      closeRequestForm();
-    }catch(error){
-      console.error(error);
-      alert("Error sending request");
-    }
+      await fetch(WEBAPP,{method:"POST",body:formData});
+      alert("Request submitted successfully!"); closeRequestForm();
+    }catch(err){ console.error(err); alert("Error sending request"); }
   }
 
   // LOAD ADMIN REQUESTS
   function loadRequests(){
     fetch(WEBAPP)
-    .then(res => res.json())
-    .then(data => {
-      let table = document.getElementById("requestTable");
-      table.innerHTML = `
-      <tr>
-      <th>Employee</th>
-      <th>Date</th>
-      <th>Reason</th>
-      <th>Time Requested</th>
-      <th>Status</th>
-      <th>Action</th>
-      </tr>
-      `;
-      data.forEach(req => {
-        let row = document.createElement("tr");
-        row.innerHTML = `
-        <td>${req.name}</td>
-        <td>${req.date}</td>
-        <td>${req.reason}</td>
-        <td>${new Date(req.time).toLocaleString()}</td>
-       <td class="${
-        req.status.toLowerCase() === 'pending' ? 'status-pending' :
-        req.status.toLowerCase() === 'approved' ? 'status-approved' :
-        req.status.toLowerCase() === 'rejected' ? 'status-rejected' : ''
-        }">${req.status}</td>
-        `;
+    .then(res=>res.json())
+    .then(data=>{
+      let table=document.getElementById("requestTable");
+      table.innerHTML=`<tr>
+<th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
+      data.forEach(req=>{
+        let row=document.createElement("tr");
+        row.innerHTML=`
+<td>${req.name}</td>
+<td>${req.date}</td>
+<td>${req.reason}</td>
+<td>${new Date(req.time).toLocaleString()}</td>
+<td class="${
+  req.status.toLowerCase()==='pending'?'status-pending':
+  req.status.toLowerCase()==='approved'?'status-approved':
+  req.status.toLowerCase()==='rejected'?'status-rejected':''}">${req.status}</td>
+<td>
+<button onclick="approve(${req.row})">Approve</button>
+<button onclick="reject(${req.row})">Reject</button>
+</td>
+`;
         table.appendChild(row);
       });
     });
@@ -327,25 +273,43 @@ document.addEventListener("DOMContentLoaded", function(){
 
   // EMPLOYEES
   const employees = {
-    admin:{password:'admin1234',role:'admin',irs:[]},
-    elyza:{ password:'1234', irs:[]},
-    eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-    rachelle:{ password:'1234', irs:[] },
-    ramy:{ password:'1234', irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
-    penales:{ password:'1234', irs:[] },
-    joshua:{ password:'1234', irs:[] },
-    // ... rest of your employees
+admin:{password:'admin1234',role:'admin',irs:[]},
+elyza:{ password:'1234', irs:[]},
+eliza:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+rachelle:{ password:'1234', irs:[] },
+ramy:{ password:'1234', irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+penales:{ password:'1234', irs:[] },
+joshua:{ password:'1234', irs:[] },
+ramos:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+jules:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+rulona:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+sitoy:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+dave:{ password:'1234', irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+jm:{ password:'1234', irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+allan:{ password:'1234', irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning for Suspension'}]},
+valerie:{ password:'1234', irs:[
+{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'},
+{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}
+]},
+gerald:{ password:'1234', irs:[]},
+genalou:{ password:'1234', irs:[]},
+mark:{ password:'1234', irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+rico:{ password:'1234', irs:[{date:'January 26, 2026',incident:'Using of gadgets while on duty',status:'IR SERVED',note:'Warning for Suspension'}]},
+grace:{ password:'1234', irs:[]},
+jeanette:{ password:'1234', irs:[]},
+khevin:{ password:'1234', irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning for Suspension'}]},
+cm:{ password:'1234', irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]}
   };
 
   function loadIR(user){
-    const table = document.getElementById('irTable');
-    table.innerHTML = '<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>';
+    const table=document.getElementById('irTable');
+    table.innerHTML='<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>';
     employees[user].irs.forEach(ir=>{
-      const row = table.insertRow();
-      row.insertCell(0).innerText = ir.date;
-      row.insertCell(1).innerText = ir.incident;
-      row.insertCell(2).innerText = ir.status;
-      row.insertCell(3).innerText = ir.note;
+      const row=table.insertRow();
+      row.insertCell(0).innerText=ir.date;
+      row.insertCell(1).innerText=ir.incident;
+      row.insertCell(2).innerText=ir.status;
+      row.insertCell(3).innerText=ir.note;
     });
   }
 
@@ -361,19 +325,13 @@ document.addEventListener("DOMContentLoaded", function(){
   window.logout = logout;
 
   function changePassword(){
-    const newPass = document.getElementById('newPassword').value;
-    const user = document.getElementById('employeeName').innerText.toLowerCase();
-    if(!newPass){
-      alert('Enter a new password');
-      return;
-    }
-    if(newPass === employees[user].password){
-      alert('New password must be different from the old one');
-      return;
-    }
-    employees[user].password = newPass;
+    const newPass=document.getElementById('newPassword').value;
+    const user=document.getElementById('employeeName').innerText.toLowerCase();
+    if(!newPass){ alert('Enter a new password'); return; }
+    if(newPass===employees[user].password){ alert('New password must be different from the old one'); return; }
+    employees[user].password=newPass;
     alert('Password updated successfully!');
-    document.getElementById('newPassword').value = '';
+    document.getElementById('newPassword').value='';
   }
   window.changePassword = changePassword;
 
@@ -392,36 +350,32 @@ document.addEventListener("DOMContentLoaded", function(){
   // LOGIN FORM
   document.getElementById('loginForm').addEventListener('submit', function(e){
     e.preventDefault();
-    const user = document.getElementById('username').value.trim().toLowerCase();
-    const pass = document.getElementById('password').value;
+    const user=document.getElementById('username').value.trim().toLowerCase();
+    const pass=document.getElementById('password').value;
 
-    if(employees[user] && employees[user].password === pass){
-      if(employees[user].role === "admin"){
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
+    if(employees[user] && employees[user].password===pass){
+      if(employees[user].role==="admin"){
+        document.getElementById('login').style.display='none';
+        document.getElementById('adminPanel').style.display='block';
         loadRequests();
-        setInterval(loadRequests,2000); // refresh every 2 sec
+        setInterval(loadRequests,2000);
         return;
       }
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('portal').style.display = 'block';
-      document.getElementById('employeeName').innerText =
-        user.charAt(0).toUpperCase() + user.slice(1);
+      document.getElementById('login').style.display='none';
+      document.getElementById('portal').style.display='block';
+      document.getElementById('employeeName').innerText=user.charAt(0).toUpperCase()+user.slice(1);
       loadIR(user);
-    } else {
-      document.getElementById('loginMessage').innerText = 'Invalid username or password';
+    }else{
+      document.getElementById('loginMessage').innerText='Invalid username or password';
     }
   });
 
-}); // end DOMContentLoaded
+}); // DOMContentLoaded
 </script>
 
 <!-- WOW.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
-<script>
-new WOW().init();
-</script>
+<script>new WOW().init();</script>
 
 </body>
 </html>
-
