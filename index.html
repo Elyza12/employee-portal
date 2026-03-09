@@ -250,19 +250,23 @@ document.addEventListener("DOMContentLoaded", function(){
       data.forEach(req=>{
         let row = document.createElement("tr");
         row.innerHTML = `
-          <td>${req.name}</td>
-          <td>${req.date}</td>
-          <td>${req.reason}</td>
-          <td>${new Date(req.time).toLocaleString()}</td>
-          <td class="${
-            req.status.toLowerCase() === 'pending' ? 'status-pending' :
-            req.status.toLowerCase() === 'approved' ? 'status-approved' :
-            req.status.toLowerCase() === 'rejected' ? 'status-rejected' : ''
-          }">${req.status}</td>
-          <td>
-            ${req.status.toLowerCase() === 'pending' ? `<button onclick="approve(${req.row})">Approve</button>
-            <button onclick="reject(${req.row})">Reject</button>` : ''}
-          </td>`;
+  <td>${req.name}</td>
+  <td>${req.date}</td>
+  <td>${req.reason}</td>
+  <td>${new Date(req.time).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+  })}</td>
+  <td class="${
+    req.status.toLowerCase() === 'pending' ? 'status-pending' :
+    req.status.toLowerCase() === 'approved' ? 'status-approved' :
+    req.status.toLowerCase() === 'rejected' ? 'status-rejected' : ''
+  }">${req.status}</td>
+  <td>
+    ${req.status.toLowerCase() === 'pending' ? `<button onclick="approve(${req.row})">Approve</button>
+    <button onclick="reject(${req.row})">Reject</button>` : ''}
+  </td>`;
         table.appendChild(row);
       });
     });
@@ -373,3 +377,4 @@ document.addEventListener("DOMContentLoaded", function(){
 <script>new WOW().init();</script>
 </body>
 </html>
+
