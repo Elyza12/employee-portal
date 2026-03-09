@@ -4,75 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Awi Employee Portal</title>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
 <style>
-body{
-  margin:0;
-  font-family:'Segoe UI',Arial;
-  background:linear-gradient(135deg,#1b1b1b,#2b2b2b);
-}
-header{
-  background:#8b0000;
-  color:white;
-  padding:22px;
-  text-align:center;
-  font-size:28px;
-}
-section{
-  display:none;
-  padding:25px;
-  max-width:900px;
-  margin:40px auto;
-  background:white;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.25);
-}
+body{margin:0;font-family:'Segoe UI',Arial;background:linear-gradient(135deg,#1b1b1b,#2b2b2b);}
+header{background:#8b0000;color:white;padding:22px;text-align:center;font-size:28px;}
+section{display:none;padding:25px;max-width:900px;margin:40px auto;background:white;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.25);}
 #login{display:block;max-width:400px;}
-input,textarea{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
-}
-button{
-  background:#b22222;
-  color:white;
-  border:none;
-  padding:10px;
-  cursor:pointer;
-  width:100%;
-  border-radius:6px;
-  font-weight:bold;
-}
+input,textarea{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;}
+button{background:#b22222;color:white;border:none;padding:10px;cursor:pointer;width:100%;border-radius:6px;font-weight:bold;}
 button:hover{background:#8b0000;}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-th{
-  background:#8b0000;
-  color:white;
-  padding:10px;
-}
-td{
-  padding:10px;
-  border-bottom:1px solid #eee;
-}
+table{width:100%;border-collapse:collapse;margin-top:15px;}
+th{background:#8b0000;color:white;padding:10px;}
+td{padding:10px;border-bottom:1px solid #eee;}
 .status-pending{color:orange;font-weight:bold;}
 .status-approved{color:green;font-weight:bold;}
 .status-rejected{color:red;font-weight:bold;}
-img.sched{
-  width:100%;
-  border-radius:10px;
-  margin-top:10px;
-}
+img.sched{width:100%;border-radius:10px;margin-top:10px;}
 </style>
 </head>
-
 <body>
 
 <header>Awi Employee Portal</header>
@@ -93,12 +42,7 @@ img.sched{
   <img src="sched.png" class="sched">
   <h3>Incident Reports</h3>
   <table id="irTable">
-    <tr>
-      <th>Date</th>
-      <th>Incident</th>
-      <th>Status</th>
-      <th>Note</th>
-    </tr>
+    <tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>
   </table>
 
   <h3>Change Password</h3>
@@ -169,10 +113,10 @@ cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SER
 // --- LOGIN ---
 document.getElementById("loginForm").addEventListener("submit", function(e){
   e.preventDefault();
-  const user = document.getElementById("username").value.trim().toLowerCase();
-  const pass = document.getElementById("password").value;
-  if(employees[user] && employees[user].password === pass){
-    currentUser = user;
+  const user=document.getElementById("username").value.trim().toLowerCase();
+  const pass=document.getElementById("password").value;
+  if(employees[user] && employees[user].password===pass){
+    currentUser=user;
     if(employees[user].role==="admin"){
       document.getElementById("login").style.display="none";
       document.getElementById("adminPanel").style.display="block";
@@ -194,66 +138,52 @@ function loadIR(user){
   const table=document.getElementById("irTable");
   table.innerHTML="<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>";
   employees[user].irs.forEach(ir=>{
-    let row = table.insertRow();
-    row.insertCell(0).innerText = ir.date;
-    row.insertCell(1).innerText = ir.incident;
-    row.insertCell(2).innerText = ir.status;
-    row.insertCell(3).innerText = ir.note;
+    let row=table.insertRow();
+    row.insertCell(0).innerText=ir.date;
+    row.insertCell(1).innerText=ir.incident;
+    row.insertCell(2).innerText=ir.status;
+    row.insertCell(3).innerText=ir.note;
   });
 }
 
 // --- CHANGE PASSWORD ---
 function changePassword(){
-  const newPass = document.getElementById("newPassword").value;
+  const newPass=document.getElementById("newPassword").value;
   if(!newPass){ alert("Enter new password"); return; }
-  employees[currentUser].password = newPass;
+  employees[currentUser].password=newPass;
   alert("Password updated!");
   document.getElementById("newPassword").value="";
 }
 
 // --- RESTRICT FRI-SUN ---
 document.getElementById("offDate").addEventListener("change",function(){
-  const day = new Date(this.value).getDay();
-  if(day===5 || day===6 || day===0){
-    alert("Only Monday to Thursday allowed");
-    this.value="";
-  }
+  const day=new Date(this.value).getDay();
+  if(day===5||day===6||day===0){ alert("Only Monday to Thursday allowed"); this.value=""; }
 });
 
-// --- SUBMIT REQUEST (Fixed with FormData) ---
+// --- SUBMIT REQUEST ---
 async function submitRequest(){
   const date=document.getElementById("offDate").value;
   const reason=document.getElementById("offReason").value;
-  if(!date || !reason){ alert("Please complete the form"); return; }
-  const formData = new FormData();
-  formData.append("name", currentUser);
-  formData.append("date", date);
-  formData.append("reason", reason);
+  if(!date||!reason){ alert("Please complete the form"); return; }
+  const formData=new FormData();
+  formData.append("name",currentUser);
+  formData.append("date",date);
+  formData.append("reason",reason);
   try{
-    const res = await fetch(WEBAPP, { method:"POST", body:formData });
-    if(res.ok){
-      alert("Request sent!");
-      document.getElementById("offDate").value="";
-      document.getElementById("offReason").value="";
-      closeRequestForm();
-    } else { throw new Error("Network response was not OK"); }
+    const res=await fetch(WEBAPP,{method:"POST",body:formData});
+    if(res.ok){ alert("Request sent!"); document.getElementById("offDate").value=""; document.getElementById("offReason").value=""; closeRequestForm(); }
+    else{ throw new Error("Network response not OK"); }
   } catch(err){ console.error(err); alert("Error sending request"); }
 }
 
 // --- LOAD REQUESTS ---
-<!-- ADMIN TABLE RENDERING FIX -->
 function loadRequests(){
-  fetch(WEBAPP)
-  .then(res=>res.json())
-  .then(data=>{
+  fetch(WEBAPP).then(res=>res.json()).then(data=>{
     const table=document.getElementById("requestTable");
-    table.innerHTML=`<tr>
-      <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
-    </tr>`;
-
+    table.innerHTML=`<tr><th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
     data.forEach(req=>{
       const row=document.createElement("tr");
-
       row.innerHTML=`
         <td>${req.name}</td>
         <td>${new Date(req.date).toLocaleDateString()}</td>
@@ -262,22 +192,17 @@ function loadRequests(){
         <td class="status-${req.status.toLowerCase()}">${req.status}</td>
         <td class="action-cell"></td>
       `;
-
       if(req.status==="Pending"){
-        const actionCell = row.querySelector(".action-cell");
-
-        const approveBtn = document.createElement("button");
-        approveBtn.innerText = "Approve";
-        approveBtn.addEventListener("click", ()=> approve(req.row));
-
-        const rejectBtn = document.createElement("button");
-        rejectBtn.innerText = "Reject";
-        rejectBtn.addEventListener("click", ()=> reject(req.row));
-
+        const actionCell=row.querySelector(".action-cell");
+        const approveBtn=document.createElement("button");
+        approveBtn.innerText="Approve";
+        approveBtn.addEventListener("click",()=>approve(req.row));
+        const rejectBtn=document.createElement("button");
+        rejectBtn.innerText="Reject";
+        rejectBtn.addEventListener("click",()=>reject(req.row));
         actionCell.appendChild(approveBtn);
         actionCell.appendChild(rejectBtn);
       }
-
       table.appendChild(row);
     });
   });
@@ -285,19 +210,10 @@ function loadRequests(){
 
 // --- APPROVE / REJECT ---
 function approve(row){
-  fetch(WEBAPP,{
-    method:"POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({action:"approve", row:row})
-  }).then(()=>loadRequests());
+  fetch(WEBAPP,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"approve",row:row})}).then(()=>loadRequests());
 }
-
 function reject(row){
-  fetch(WEBAPP,{
-    method:"POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({action:"reject", row:row})
-  }).then(()=>loadRequests());
+  fetch(WEBAPP,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"reject",row:row})}).then(()=>loadRequests());
 }
 
 // --- NAVIGATION ---
@@ -308,5 +224,3 @@ function logout(){ document.getElementById("portal").style.display="none"; docum
 </script>
 </body>
 </html>
-
-
