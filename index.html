@@ -200,17 +200,18 @@ const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK
 
 // APPROVE / REJECT
 function approve(row){
-  fetch(WEBAPP + "?row=" + row + "&status=Approved")
-  .then(res => res.text())
-  .then(() => { alert("Request Approved"); loadRequests(); });
+  fetch(`${WEBAPP}?row=${row}&status=Approved`)
+  .then(res=>res.text())
+  .then(()=>{ alert("Request Approved"); loadRequests(); });
 }
 function reject(row){
-  fetch(WEBAPP + "?row=" + row + "&status=Rejected")
-  .then(res => res.text())
-  .then(() => { alert("Request Rejected"); loadRequests(); });
+  fetch(`${WEBAPP}?row=${row}&status=Rejected`)
+  .then(res=>res.text())
+  .then(()=>{ alert("Request Rejected"); loadRequests(); });
 }
 
 document.addEventListener("DOMContentLoaded", function(){
+
   document.getElementById('login').style.display = 'block';
 
   document.getElementById("offDate").addEventListener("input", function(){
@@ -242,31 +243,31 @@ document.addEventListener("DOMContentLoaded", function(){
     fetch(WEBAPP)
     .then(res => res.json())
     .then(data => {
-      let table = document.getElementById("requestTable");
+      const table = document.getElementById("requestTable");
       table.innerHTML = `
         <tr>
           <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
         </tr>`;
       data.forEach(req=>{
-        let row = document.createElement("tr");
+        const row = document.createElement("tr");
         row.innerHTML = `
-  <td>${req.name}</td>
-  <td>${req.date}</td>
-  <td>${req.reason}</td>
-  <td>${new Date(req.time).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-  })}</td>
-  <td class="${
-    req.status.toLowerCase() === 'pending' ? 'status-pending' :
-    req.status.toLowerCase() === 'approved' ? 'status-approved' :
-    req.status.toLowerCase() === 'rejected' ? 'status-rejected' : ''
-  }">${req.status}</td>
-  <td>
-    ${req.status.toLowerCase() === 'pending' ? `<button onclick="approve(${req.row})">Approve</button>
-    <button onclick="reject(${req.row})">Reject</button>` : ''}
-  </td>`;
+<td>${req.name}</td>
+<td>${req.date}</td>
+<td>${req.reason}</td>
+<td>${new Date(req.time).toLocaleString('en-US',{
+  year:'numeric', month:'long', day:'numeric',
+  hour:'numeric', minute:'2-digit', hour12:true
+})}</td>
+<td class="${
+  req.status.toLowerCase()==='pending'?'status-pending':
+  req.status.toLowerCase()==='approved'?'status-approved':
+  req.status.toLowerCase()==='rejected'?'status-rejected':''
+}">${req.status}</td>
+<td>${
+  req.status.toLowerCase()==='pending'?`
+    <button onclick="approve(${req.row})">Approve</button>
+    <button onclick="reject(${req.row})">Reject</button>`:''
+}</td>`;
         table.appendChild(row);
       });
     });
@@ -377,4 +378,3 @@ document.addEventListener("DOMContentLoaded", function(){
 <script>new WOW().init();</script>
 </body>
 </html>
-
