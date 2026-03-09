@@ -415,7 +415,12 @@ if (employees[user] && employees[user].password === pass) {
 if(employees[user].role === "admin"){
 document.getElementById('login').style.display = 'none';
 document.getElementById('adminPanel').style.display = 'block';
+
 loadRequests();
+
+// refresh every 2 seconds
+setInterval(loadRequests,2000);
+
 return;
 }
 
@@ -496,6 +501,7 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
 
