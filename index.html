@@ -8,81 +8,68 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
-
 body{
-margin:0;
-font-family:'Segoe UI',Arial;
-background:linear-gradient(135deg,#1b1b1b,#2b2b2b);
+  margin:0;
+  font-family:'Segoe UI',Arial;
+  background:linear-gradient(135deg,#1b1b1b,#2b2b2b);
 }
-
 header{
-background:#8b0000;
-color:white;
-padding:22px;
-text-align:center;
-font-size:28px;
+  background:#8b0000;
+  color:white;
+  padding:22px;
+  text-align:center;
+  font-size:28px;
 }
-
 section{
-display:none;
-padding:25px;
-max-width:900px;
-margin:40px auto;
-background:white;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  display:none;
+  padding:25px;
+  max-width:900px;
+  margin:40px auto;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
-
 #login{display:block;max-width:400px;}
-
 input,textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:6px;
-border:1px solid #ccc;
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
 }
-
 button{
-background:#b22222;
-color:white;
-border:none;
-padding:10px;
-cursor:pointer;
-width:100%;
-border-radius:6px;
-font-weight:bold;
+  background:#b22222;
+  color:white;
+  border:none;
+  padding:10px;
+  cursor:pointer;
+  width:100%;
+  border-radius:6px;
+  font-weight:bold;
 }
-
 button:hover{background:#8b0000;}
-
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
 }
-
 th{
-background:#8b0000;
-color:white;
-padding:10px;
+  background:#8b0000;
+  color:white;
+  padding:10px;
 }
-
 td{
-padding:10px;
-border-bottom:1px solid #eee;
+  padding:10px;
+  border-bottom:1px solid #eee;
 }
-
 .status-pending{color:orange;font-weight:bold;}
 .status-approved{color:green;font-weight:bold;}
 .status-rejected{color:red;font-weight:bold;}
-
 img.sched{
-width:100%;
-border-radius:10px;
-margin-top:10px;
+  width:100%;
+  border-radius:10px;
+  margin-top:10px;
 }
-
 </style>
 </head>
 
@@ -91,332 +78,207 @@ margin-top:10px;
 <header>Awi Employee Portal</header>
 
 <section id="login">
-
-<h2>Login</h2>
-
-<form id="loginForm">
-<input type="text" id="username" placeholder="First Name" required>
-<input type="password" id="password" placeholder="Password" required>
-<button type="submit">Login</button>
-</form>
-
-<p id="loginMessage" style="color:red;"></p>
-
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="First Name" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+  <p id="loginMessage" style="color:red;"></p>
 </section>
 
 <section id="portal">
+  <h2>Welcome, <span id="employeeName"></span></h2>
+  <h3>Work Schedule</h3>
+  <img src="sched.png" class="sched">
+  <h3>Incident Reports</h3>
+  <table id="irTable">
+    <tr>
+      <th>Date</th>
+      <th>Incident</th>
+      <th>Status</th>
+      <th>Note</th>
+    </tr>
+  </table>
 
-<h2>Welcome, <span id="employeeName"></span></h2>
+  <h3>Change Password</h3>
+  <input type="password" id="newPassword" placeholder="New Password">
+  <button onclick="changePassword()">Update Password</button>
 
-<h3>Work Schedule</h3>
-<img src="sched.png" class="sched">
-
-<h3>Incident Reports</h3>
-
-<table id="irTable">
-<tr>
-<th>Date</th>
-<th>Incident</th>
-<th>Status</th>
-<th>Note</th>
-</tr>
-</table>
-
-<h3>Change Password</h3>
-<input type="password" id="newPassword" placeholder="New Password">
-<button onclick="changePassword()">Update Password</button>
-
-<br><br>
-
-<button onclick="openRequestForm()">Request Off</button>
-<button onclick="logout()">Logout</button>
-
+  <br><br>
+  <button onclick="openRequestForm()">Request Off</button>
+  <button onclick="logout()">Logout</button>
 </section>
 
 <section id="requestFormSection">
-
-<h2>Request Day Off</h2>
-
-<label>Select Date (Monday–Thursday only)</label>
-<input type="date" id="offDate">
-
-<label>Reason</label>
-<textarea id="offReason"></textarea>
-
-<button onclick="submitRequest()">Submit Request</button>
-<button onclick="closeRequestForm()">Cancel</button>
-
+  <h2>Request Day Off</h2>
+  <label>Select Date (Monday–Thursday only)</label>
+  <input type="date" id="offDate">
+  <label>Reason</label>
+  <textarea id="offReason"></textarea>
+  <button onclick="submitRequest()">Submit Request</button>
+  <button onclick="closeRequestForm()">Cancel</button>
 </section>
 
 <section id="adminPanel">
-
-<h2>Admin — Request List</h2>
-
-<table id="requestTable">
-<tr>
-<th>Employee</th>
-<th>Date</th>
-<th>Reason</th>
-<th>Time Requested</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</table>
-
-<button onclick="logout()">Logout</button>
-
+  <h2>Admin — Request List</h2>
+  <table id="requestTable">
+    <tr>
+      <th>Employee</th>
+      <th>Date</th>
+      <th>Reason</th>
+      <th>Time Requested</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </table>
+  <button onclick="logout()">Logout</button>
 </section>
 
 <script>
+const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
+let currentUser = "";
 
-const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
-
-let currentUser="";
-
-const employees={
-
+// --- EMPLOYEES FULL RESTORED WITH IRS ---
+const employees = {
 admin:{password:'admin1234',role:'admin',irs:[]},
-
 elyza:{password:'1234',irs:[]},
-
-eliza:{password:'1234',irs:[
-{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}
-]},
-
+eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
 rachelle:{password:'1234',irs:[]},
-
-ramy:{password:'1234',irs:[
-{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}
-]}
-
+ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+penales:{password:'1234',irs:[]},
+joshua:{password:'1234',irs:[]},
+ramos:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+jules:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+rulona:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+sitoy:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+dave:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+jm:{password:'1234',irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+allan:{password:'1234',irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}]},
+valerie:{password:'1234',irs:[{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}]},
+gerald:{password:'1234',irs:[]},
+genalou:{password:'1234',irs:[]},
+mark:{password:'1234',irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+rico:{password:'1234',irs:[{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}]},
+grace:{password:'1234',irs:[]},
+jeanette:{password:'1234',irs:[]},
+khevin:{password:'1234',irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}]},
+cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
 };
 
-
-
-document.getElementById("loginForm").addEventListener("submit",function(e){
-
-e.preventDefault();
-
-const user=document.getElementById("username").value.trim().toLowerCase();
-const pass=document.getElementById("password").value;
-
-if(employees[user] && employees[user].password===pass){
-
-currentUser=user;
-
-if(employees[user].role==="admin"){
-
-document.getElementById("login").style.display="none";
-document.getElementById("adminPanel").style.display="block";
-
-loadRequests();
-setInterval(loadRequests,2000);
-
-return;
-
-}
-
-document.getElementById("login").style.display="none";
-document.getElementById("portal").style.display="block";
-
-document.getElementById("employeeName").innerText=user;
-
-loadIR(user);
-
-}else{
-
-document.getElementById("loginMessage").innerText="Invalid username or password";
-
-}
-
-});
-
-
-function loadIR(user){
-
-const table=document.getElementById("irTable");
-
-table.innerHTML="<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>";
-
-employees[user].irs.forEach(ir=>{
-
-let row=table.insertRow();
-
-row.insertCell(0).innerText=ir.date;
-row.insertCell(1).innerText=ir.incident;
-row.insertCell(2).innerText=ir.status;
-row.insertCell(3).innerText=ir.note;
-
-});
-
-}
-
-
-function changePassword(){
-
-const newPass=document.getElementById("newPassword").value;
-
-if(!newPass){
-
-alert("Enter new password");
-return;
-
-}
-
-employees[currentUser].password=newPass;
-
-alert("Password updated!");
-
-document.getElementById("newPassword").value="";
-
-}
-
-
-document.getElementById("offDate").addEventListener("change",function(){
-
-const day=new Date(this.value).getDay();
-
-if(day===5 || day===6 || day===0){
-
-alert("Only Monday to Thursday allowed");
-
-this.value="";
-
-}
-
-});
-
-
-async function submitRequest() {
-  const date = document.getElementById("offDate").value;
-  const reason = document.getElementById("offReason").value;
-
-  if (!date || !reason) {
-    alert("Please complete the form");
-    return;
-  }
-
-  const payload = {
-    name: currentUser,
-    date: date,
-    reason: reason
-  };
-
-  try {
-    const res = await fetch(WEBAPP, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) {
-      alert("Request sent!");
-      document.getElementById("offDate").value = "";
-      document.getElementById("offReason").value = "";
-      closeRequestForm();
-    } else {
-      throw new Error("Network response was not OK");
+// --- LOGIN ---
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const user = document.getElementById("username").value.trim().toLowerCase();
+  const pass = document.getElementById("password").value;
+  if(employees[user] && employees[user].password === pass){
+    currentUser = user;
+    if(employees[user].role==="admin"){
+      document.getElementById("login").style.display="none";
+      document.getElementById("adminPanel").style.display="block";
+      loadRequests();
+      setInterval(loadRequests,2000);
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error sending request");
+    document.getElementById("login").style.display="none";
+    document.getElementById("portal").style.display="block";
+    document.getElementById("employeeName").innerText=user;
+    loadIR(user);
+  } else {
+    document.getElementById("loginMessage").innerText="Invalid username or password";
   }
+});
+
+// --- LOAD IR ---
+function loadIR(user){
+  const table=document.getElementById("irTable");
+  table.innerHTML="<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>";
+  employees[user].irs.forEach(ir=>{
+    let row = table.insertRow();
+    row.insertCell(0).innerText = ir.date;
+    row.insertCell(1).innerText = ir.incident;
+    row.insertCell(2).innerText = ir.status;
+    row.insertCell(3).innerText = ir.note;
+  });
 }
 
+// --- CHANGE PASSWORD ---
+function changePassword(){
+  const newPass = document.getElementById("newPassword").value;
+  if(!newPass){ alert("Enter new password"); return; }
+  employees[currentUser].password = newPass;
+  alert("Password updated!");
+  document.getElementById("newPassword").value="";
+}
+
+// --- RESTRICT FRI-SUN ---
+document.getElementById("offDate").addEventListener("change",function(){
+  const day = new Date(this.value).getDay();
+  if(day===5 || day===6 || day===0){
+    alert("Only Monday to Thursday allowed");
+    this.value="";
+  }
+});
+
+// --- SUBMIT REQUEST (Fixed with FormData) ---
+async function submitRequest(){
+  const date=document.getElementById("offDate").value;
+  const reason=document.getElementById("offReason").value;
+  if(!date || !reason){ alert("Please complete the form"); return; }
+  const formData = new FormData();
+  formData.append("name", currentUser);
+  formData.append("date", date);
+  formData.append("reason", reason);
+  try{
+    const res = await fetch(WEBAPP, { method:"POST", body:formData });
+    if(res.ok){
+      alert("Request sent!");
+      document.getElementById("offDate").value="";
+      document.getElementById("offReason").value="";
+      closeRequestForm();
+    } else { throw new Error("Network response was not OK"); }
+  } catch(err){ console.error(err); alert("Error sending request"); }
+}
+
+// --- LOAD REQUESTS ---
 function loadRequests(){
-
-fetch(WEBAPP)
-
-.then(res=>res.json())
-
-.then(data=>{
-
-const table=document.getElementById("requestTable");
-
-table.innerHTML=`<tr>
-<th>Employee</th>
-<th>Date</th>
-<th>Reason</th>
-<th>Time Requested</th>
-<th>Status</th>
-<th>Action</th>
-</tr>`;
-
-data.forEach(req=>{
-
-const row=document.createElement("tr");
-
-row.innerHTML=`
-
-<td>${req.name}</td>
-<td>${new Date(req.date).toLocaleDateString()}</td>
-<td>${req.reason}</td>
-<td>${new Date(req.time).toLocaleString()}</td>
-<td class="status-${req.status.toLowerCase()}">${req.status}</td>
-<td>
-
-${req.status==="Pending"?`
-<button onclick="approve(${req.row})">Approve</button>
-<button onclick="reject(${req.row})">Reject</button>
-`:""}
-
-</td>
-
-`;
-
-table.appendChild(row);
-
-});
-
-});
-
+  fetch(WEBAPP)
+  .then(res=>res.json())
+  .then(data=>{
+    const table=document.getElementById("requestTable");
+    table.innerHTML=`<tr>
+      <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
+    </tr>`;
+    data.forEach(req=>{
+      const row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${req.name}</td>
+        <td>${new Date(req.date).toLocaleDateString()}</td>
+        <td>${req.reason}</td>
+        <td>${new Date(req.time).toLocaleString()}</td>
+        <td class="status-${req.status.toLowerCase()}">${req.status}</td>
+        <td>${req.status==="Pending"?`<button onclick="approve(${req.row})">Approve</button><button onclick="reject(${req.row})">Reject</button>`:""}</td>
+      `;
+      table.appendChild(row);
+    });
+  });
 }
 
-
+// --- APPROVE / REJECT ---
 function approve(row){
-
-fetch(WEBAPP,{
-method:"POST",
-body:JSON.stringify({action:"approve",row:row})
-}).then(()=>loadRequests());
-
+  fetch(WEBAPP,{method:"POST",body:JSON.stringify({action:"approve",row:row}),headers:{"Content-Type":"application/json"}})
+  .then(()=>loadRequests());
 }
-
-
 function reject(row){
-
-fetch(WEBAPP,{
-method:"POST",
-body:JSON.stringify({action:"reject",row:row})
-}).then(()=>loadRequests());
-
+  fetch(WEBAPP,{method:"POST",body:JSON.stringify({action:"reject",row:row}),headers:{"Content-Type":"application/json"}})
+  .then(()=>loadRequests());
 }
 
-
-function openRequestForm(){
-
-document.getElementById("portal").style.display="none";
-document.getElementById("requestFormSection").style.display="block";
-
-}
-
-function closeRequestForm(){
-
-document.getElementById("requestFormSection").style.display="none";
-document.getElementById("portal").style.display="block";
-
-}
-
-function logout(){
-
-document.getElementById("portal").style.display="none";
-document.getElementById("adminPanel").style.display="none";
-document.getElementById("login").style.display="block";
-
-}
+// --- NAVIGATION ---
+function openRequestForm(){ document.getElementById("portal").style.display="none"; document.getElementById("requestFormSection").style.display="block"; }
+function closeRequestForm(){ document.getElementById("requestFormSection").style.display="none"; document.getElementById("portal").style.display="block"; }
+function logout(){ document.getElementById("portal").style.display="none"; document.getElementById("adminPanel").style.display="none"; document.getElementById("login").style.display="block"; }
 
 </script>
-
 </body>
 </html>
-
