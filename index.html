@@ -241,6 +241,7 @@ async function submitRequest(){
 }
 
 // --- LOAD REQUESTS ---
+<!-- ADMIN TABLE RENDERING FIX -->
 function loadRequests(){
   fetch(WEBAPP)
   .then(res=>res.json())
@@ -249,16 +250,34 @@ function loadRequests(){
     table.innerHTML=`<tr>
       <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
     </tr>`;
+
     data.forEach(req=>{
       const row=document.createElement("tr");
+
       row.innerHTML=`
         <td>${req.name}</td>
         <td>${new Date(req.date).toLocaleDateString()}</td>
         <td>${req.reason}</td>
         <td>${new Date(req.time).toLocaleString()}</td>
         <td class="status-${req.status.toLowerCase()}">${req.status}</td>
-        <td>${req.status==="Pending"?`<button onclick="approve(${req.row})">Approve</button><button onclick="reject(${req.row})">Reject</button>`:""}</td>
+        <td class="action-cell"></td>
       `;
+
+      if(req.status==="Pending"){
+        const actionCell = row.querySelector(".action-cell");
+
+        const approveBtn = document.createElement("button");
+        approveBtn.innerText = "Approve";
+        approveBtn.addEventListener("click", ()=> approve(req.row));
+
+        const rejectBtn = document.createElement("button");
+        rejectBtn.innerText = "Reject";
+        rejectBtn.addEventListener("click", ()=> reject(req.row));
+
+        actionCell.appendChild(approveBtn);
+        actionCell.appendChild(rejectBtn);
+      }
+
       table.appendChild(row);
     });
   });
@@ -289,4 +308,5 @@ function logout(){ document.getElementById("portal").style.display="none"; docum
 </script>
 </body>
 </html>
+
 
