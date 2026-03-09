@@ -234,6 +234,7 @@ Awi Employee Portal
 <th>Reason</th>
 <th>Time Requested</th>
 <th>Status</th>
+<th>Action</th>
 </tr>
 </table>
 
@@ -327,7 +328,16 @@ fetch(WEBAPP)
 
 let table = document.getElementById("requestTable");
 
-table.innerHTML="";
+table.innerHTML = `
+<tr>
+<th>Employee</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Time Requested</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+`;
 
 data.forEach(req => {
 
@@ -337,8 +347,8 @@ row.innerHTML = `
 <td>${req.name}</td>
 <td>${req.date}</td>
 <td>${req.reason}</td>
+<td>${new Date(req.time).toLocaleString()}</td>
 <td>${req.status}</td>
-
 <td>
 <button onclick="approve(${req.row})">Approve</button>
 <button onclick="reject(${req.row})">Reject</button>
@@ -486,5 +496,6 @@ new WOW().init();
 
 </body>
 </html>
+
 
 
