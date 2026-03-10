@@ -106,6 +106,9 @@ border-bottom:1px solid #ddd;
 
 <h2>Welcome <span id="employeeName"></span></h2>
 
+<h3>Work Schedule</h3>
+<img src="sched.png" style="width:100%;border-radius:10px;margin-bottom:20px;">
+
 <h3>Incident Reports</h3>
 
 <table id="irTable">
@@ -174,6 +177,19 @@ border-bottom:1px solid #ddd;
 
 
 <script>
+document.getElementById("offDate").addEventListener("change",function(){
+
+const day = new Date(this.value).getDay();
+
+if(day === 5 || day === 6 || day === 0){
+
+alert("Only Monday to Thursday allowed");
+
+this.value="";
+
+}
+
+});
 
 const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 
@@ -470,9 +486,12 @@ fetch(WEBAPP,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({action:"approve",row:row})
-}).then(()=>loadRequests());
+})
+.then(res=>res.text())
+.then(()=>loadRequests());
 
 }
+
 
 function reject(row){
 
@@ -480,7 +499,9 @@ fetch(WEBAPP,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({action:"reject",row:row})
-}).then(()=>loadRequests());
+})
+.then(res=>res.text())
+.then(()=>loadRequests());
 
 }
 
@@ -500,3 +521,4 @@ login.style.display="block";
 
 </body>
 </html>
+
