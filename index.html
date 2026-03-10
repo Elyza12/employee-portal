@@ -67,7 +67,7 @@ td{
 .action-btn:hover{ opacity:0.8; }
 .approve-btn{ background:green; color:white; }
 .reject-btn{ background:red; color:white; }
-#offNote{ color:red; font-style:italic; margin-bottom:5px; }
+#offNote{ color:black; font-style:normal; margin-bottom:5px; }
 </style>
 </head>
 <body>
@@ -112,7 +112,8 @@ td{
 <!-- REQUEST FORM -->
 <section id="requestFormSection">
   <h2>Request Day Off</h2>
-  <p id="offNote">Select only Monday–Thursday. Friday–Sunday is not allowed.</p>
+  <p id="offNote">Select only Monday–Thursday.</p>
+  <p>Wait for 5 seconds after submitting. Do not click multiple times</p>
   <input type="date" id="offDate">
   <textarea id="offReason" placeholder="Reason"></textarea>
   <button onclick="submitRequest()">Submit</button>
@@ -302,5 +303,6 @@ function logout(){
 
 </body>
 </html>
+
 
 
