@@ -109,14 +109,27 @@ td{
 </section>
 
 <!-- REQUEST FORM -->
+<!-- REQUEST FORM -->
 <section id="requestFormSection">
-<h2>Request Day Off</h2>
-<p id="offNote">Select only Monday–Thursday. Friday–Sunday is not allowed.</p>
-<input type="date" id="offDate">
-<textarea id="offReason" placeholder="Reason"></textarea>
-<button onclick="submitRequest()">Submit</button>
-<button onclick="closeRequestForm()">Cancel</button>
+  <h2>Request Day Off</h2>
+  <p id="offNote">Select only Monday–Thursday. Friday–Sunday is not allowed.</p>
+  <input type="date" id="offDate">
+  <textarea id="offReason" placeholder="Reason"></textarea>
+  <button onclick="submitRequest()">Submit</button>
+  <button onclick="closeRequestForm()">Cancel</button>
 </section>
+
+<script>
+// Prevent selecting Friday (5), Saturday (6), Sunday (0)
+document.getElementById("offDate").addEventListener("change", function() {
+  const selectedDate = new Date(this.value);
+  const day = selectedDate.getDay();
+  if(day === 5 || day === 6 || day === 0) {
+    alert("Invalid date! Only Monday–Thursday allowed.");
+    this.value = ""; // clear invalid date
+  }
+});
+</script>
 
 <!-- ADMIN PANEL -->
 <section id="adminPanel">
@@ -289,4 +302,5 @@ function logout(){
 
 </body>
 </html>
+
 
