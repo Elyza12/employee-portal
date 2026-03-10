@@ -262,19 +262,21 @@ function loadRequests(){
 }
 
 /* APPROVE / REJECT */
+/* APPROVE / REJECT */
 function approve(row){
-  fetch(WEBAPP,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({action:"approve",row:row})
-  }).then(()=>loadRequests());
+  const formData = new FormData();
+  formData.append("action","approve");
+  formData.append("row",row);
+  fetch(WEBAPP,{method:"POST",body:formData})
+    .then(()=>loadRequests());
 }
+
 function reject(row){
-  fetch(WEBAPP,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({action:"reject",row:row})
-  }).then(()=>loadRequests());
+  const formData = new FormData();
+  formData.append("action","reject");
+  formData.append("row",row);
+  fetch(WEBAPP,{method:"POST",body:formData})
+    .then(()=>loadRequests());
 }
 
 /* LOGOUT */
@@ -287,3 +289,4 @@ function logout(){
 
 </body>
 </html>
+
