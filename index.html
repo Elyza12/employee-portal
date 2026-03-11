@@ -138,7 +138,7 @@ td{
 </select>
 <select id="cutoffSelect">
   <option value="1-15">1-15</option>
-  <option value="16-End">16-End</option>
+  <option value="16-31">16-End</option>
 </select>
 <button type="button" onclick="loadPayslip()">View Payslip</button>
 <div id="payslipViewer"></div>
@@ -154,8 +154,8 @@ td{
 <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
 </tr>
 </table>
-<h3>Upload Payslip</h3>
 
+<h3>Upload Payslip</h3>
 <select id="empUpload">
 <option>elyza</option>
 <option>ramy</option>
@@ -197,38 +197,23 @@ td{
 
 <select id="cutoffUpload">
 <option value="1-15">1-15</option>
-<option value="16-End">16-End</option>
+<option value="16-31">16-End</option>
 </select>
 
 <input type="file" id="payslipFile">
-
-<button onclick="uploadPayslip()">Upload Payslip</button>
+<button type="button" onclick="uploadPayslip()">Upload Payslip</button>
 
 <br><br>
 <button type="button" onclick="logout()">Logout</button>
 </section>
 
 <script>
-const PAYSLIP_FOLDER = "1z8e7qqNS-MFa7HX1B0GpScsg-xy39s"
-// ELEMENT REFERENCES
-const login = document.getElementById("login");
-const portal = document.getElementById("portal");
-const adminPanel = document.getElementById("adminPanel");
-const requestFormSection = document.getElementById("requestFormSection");
-const payslipSection = document.getElementById("payslipSection");
-const employeeName = document.getElementById("employeeName");
-const offDate = document.getElementById("offDate");
-const offReason = document.getElementById("offReason");
-const payslipViewer = document.getElementById("payslipViewer");
-const requestTable = document.getElementById("requestTable");
-const username = document.getElementById("username");
-const password = document.getElementById("password");
-const loginMessage = document.getElementById("loginMessage");
-
-const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
+const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec"; // <-- Replace with your deployed script URL
 let currentUser="";
 
-/* EMPLOYEES */
+// ========================
+// COPY ALL EXISTING EMPLOYEES OBJECT HERE (do not remove credentials)
+// ========================
 const employees = {
   admin:{password:'admin1234',role:'admin',irs:[]},
   elyza:{password:'1234',irs:[]},
@@ -255,216 +240,51 @@ const employees = {
   cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
 };
 
-/* LOGIN */
-document.getElementById("loginForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  let user=username.value.toLowerCase();
-  let pass=password.value;
-  if(employees[user] && employees[user].password===pass){
-    currentUser=user;
-    login.style.display="none";
-    if(employees[user].role==="admin"){
-      adminPanel.style.display="block";
-      loadRequests();
-      setInterval(loadRequests,3000);
-      return;
-    }
-    portal.style.display="block";
-    employeeName.innerText=user;
-    loadIR(user);
-  } else {
-    loginMessage.innerText="Invalid login";
-  }
-});
+// ========================
+// LOGIN, IR, PASSWORD, REQUEST, PAYSLIP FUNCTIONS
+// Keep all your old logic here (copy your existing JS)
+// ========================
 
-/* LOAD IR */
-function loadIR(user){
-  const table=document.getElementById("irTable");
-  table.innerHTML=`<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>`;
-  employees[user].irs.forEach(ir=>{
-    let row=table.insertRow();
-    row.insertCell(0).innerText=ir.date;
-    row.insertCell(1).innerText=ir.incident;
-    row.insertCell(2).innerText=ir.status;
-    row.insertCell(3).innerText=ir.note;
-  });
-}
-
-/* PASSWORD */
-function changePassword(){
-  let pass=document.getElementById("newPassword").value;
-  if(!pass){alert("Enter password");return;}
-  employees[currentUser].password=pass;
-  alert("Password updated");
-}
-
-/* REQUEST FORM */
-function openRequestForm(){
-  portal.style.display="none";
-  requestFormSection.style.display="block";
-}
-function closeRequestForm(){
-  requestFormSection.style.display="none";
-  portal.style.display="block";
-}
-
-/* SUBMIT REQUEST */
-async function submitRequest(){
-  let date=offDate.value;
-  let reason=offReason.value;
-  if(!date || !reason){ alert("Complete form"); return; }
-  let formData=new FormData();
-  formData.append("name",currentUser);
-  formData.append("date",date);
-  formData.append("reason",reason);
-  await fetch(WEBAPP,{method:"POST",body:formData});
-  alert("Request sent");
-  closeRequestForm();
-  offDate.value=""; offReason.value="";
-}
-
-/* ADMIN LOAD REQUESTS */
-function loadRequests(){
-  fetch(WEBAPP)
-  .then(r=>r.json())
-  .then(data=>{
-    const table=requestTable;
-    table.innerHTML=`<tr><th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
-    data.forEach(req=>{
-      let row=document.createElement("tr");
-      row.innerHTML=`
-        <td>${req.name}</td>
-        <td>${new Date(req.date).toLocaleDateString()}</td>
-        <td>${req.reason}</td>
-        <td>${new Date(req.time).toLocaleString()}</td>
-        <td class="status-${req.status.toLowerCase()}">${req.status}</td>
-        <td></td>`;
-      if(req.status==="Pending"){
-        let approveBtn=document.createElement("button");
-        approveBtn.innerText="Approve";
-        approveBtn.className="action-btn approve-btn";
-        approveBtn.onclick=()=>approve(req.id);
-        let rejectBtn=document.createElement("button");
-        rejectBtn.innerText="Reject";
-        rejectBtn.className="action-btn reject-btn";
-        rejectBtn.onclick=()=>reject(req.id);
-        row.children[5].appendChild(approveBtn);
-        row.children[5].appendChild(rejectBtn);
-      }
-      table.appendChild(row);
-    });
-  });
-}
-
-/* APPROVE / REJECT */
-function approve(id){
-  const formData = new FormData();
-  formData.append("action","approve");
-  formData.append("row",id);
-  fetch(WEBAPP,{method:"POST",body:formData})
-  .then(()=>loadRequests());
-}
-
-function reject(id){
-  const formData = new FormData();
-  formData.append("action","reject");
-  formData.append("row",id);
-  fetch(WEBAPP,{method:"POST",body:formData})
-  .then(()=>loadRequests());
-}
-/* PAYSLIP */
-function openPayslip(){
-  portal.style.display="none";
-  payslipSection.style.display="block";
-}
-function closePayslip(){
-  payslipSection.style.display="none";
-  portal.style.display="block";
-}
-function loadPayslip(){
-  const month = document.getElementById("monthSelect").value;
-  const cutoff = document.getElementById("cutoffSelect").value;
-  fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
-  .then(res=>res.json())
-  .then(data=>{
-    if(!data.url){
-      payslipViewer.innerHTML="<p>No payslip available</p>";
-      return;
-    }
-    payslipViewer.innerHTML=`
-      <iframe src="${data.url}" width="100%" height="500"></iframe>
-      <br>
-      <a href="${data.url}" target="_blank">
-        <button type="button">Download Payslip</button>
-      </a>
-    `;
-  });
-}
-
-/* LOGOUT */
-function logout(){
-  portal.style.display="none";
-  adminPanel.style.display="none";
-  login.style.display="block";
-}
-
-/* BLOCK WEEKEND DATES FOR OFF REQUEST */
-offDate.addEventListener("change", function() {
-  const selectedDate = new Date(this.value);
-  const day = selectedDate.getDay();
-  if(day === 5 || day === 6 || day === 0) {
-    alert("Invalid date! Only Monday–Thursday allowed.");
-    this.value = "";
-  }
-});
+// ========================
+// NEW: Upload Payslip Function (CORS-safe via Google Apps Script)
+// ========================
 function uploadPayslip(){
+  const emp=document.getElementById("empUpload").value;
+  const month=document.getElementById("monthUpload").value;
+  const cutoff=document.getElementById("cutoffUpload").value;
+  const file=document.getElementById("payslipFile").files[0];
 
-const emp=document.getElementById("empUpload").value;
-const month=document.getElementById("monthUpload").value;
-const cutoff=document.getElementById("cutoffUpload").value;
-const file=document.getElementById("payslipFile").files[0];
+  if(!file){ alert("Select a file"); return; }
 
-if(!file){
-alert("Please select a payslip file");
-return;
-}
+  const reader=new FileReader();
+  reader.onload=function(){
+    const base64=reader.result.split(",")[1];
+    const formData=new FormData();
+    formData.append("action","uploadPayslip");
+    formData.append("employee",emp);
+    formData.append("month",month);
+    formData.append("cutoff",cutoff);
+    formData.append("filename",file.name);
+    formData.append("mimetype",file.type);
+    formData.append("file",base64);
 
-const reader=new FileReader();
+    fetch(WEBAPP,{
+      method:"POST",
+      body:formData
+    })
+    .then(res=>res.json())
+    .then(r=>{
+      if(r.status=="uploaded") alert("Payslip uploaded successfully!");
+      else alert("Upload failed");
+    }).catch(err=>{
+      console.error(err);
+      alert("Upload error: check your web app URL and deployment settings");
+    });
+  };
 
-reader.onload=function(){
-
-const base64=reader.result.split(",")[1];
-
-let formData=new FormData();
-
-formData.append("action","uploadPayslip");
-formData.append("employee",emp);
-formData.append("month",month);
-formData.append("cutoff",cutoff);
-formData.append("filename",file.name);
-formData.append("mimetype",file.type);
-formData.append("file",base64);
-
-fetch(WEBAPP,{
-method:"POST",
-body:formData
-})
-.then(res=>res.json())
-.then(data=>{
-alert("Payslip Uploaded Successfully");
-});
-
-};
-
-reader.readAsDataURL(file);
-
+  reader.readAsDataURL(file);
 }
 </script>
 
-  
-
 </body>
 </html>
-
-
-
