@@ -4,62 +4,16 @@
 <meta charset="UTF-8">
 <title>Awi Employee Portal</title>
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background: #1b1b1b;
-  margin: 0;
-}
-header{
-  background: #8b0000;
-  color: white;
-  padding: 20px;
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-}
-section{
-  display: none;
-  background: white;
-  margin: 30px auto;
-  padding: 25px;
-  max-width: 900px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-#login{ display:block; max-width:400px; }
-input,textarea,select{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
-  box-sizing: border-box;
-}
-button{
-  background:#b22222;
-  color:white;
-  border:none;
-  padding:10px 15px;
-  cursor:pointer;
-  font-weight:bold;
-  border-radius:6px;
-  margin-top:5px;
-}
-button:hover{ background:#8b0000; }
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-th{
-  background:#8b0000;
-  color:white;
-  padding:10px;
-}
-td{
-  padding:10px;
-  border-bottom:1px solid #ddd;
-}
+body{ font-family: Arial, sans-serif; background: #1b1b1b; margin: 0;}
+header{ background: #8b0000; color:white; padding:20px; text-align:center; font-size:28px; font-weight:bold;}
+section{ display:none; background:white; margin:30px auto; padding:25px; max-width:900px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+#login{ display:block; max-width:400px;}
+input,textarea{ width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;}
+button{ background:#b22222; color:white; border:none; padding:10px 15px; cursor:pointer; font-weight:bold; border-radius:6px; margin-top:5px;}
+button:hover{ background:#8b0000;}
+table{ width:100%; border-collapse:collapse; margin-top:15px;}
+th{ background:#8b0000; color:white; padding:10px;}
+td{ padding:10px; border-bottom:1px solid #ddd;}
 .status-pending{ color:orange; font-weight:bold; }
 .status-approved{ color:green; font-weight:bold; }
 .status-rejected{ color:red; font-weight:bold; }
@@ -67,7 +21,7 @@ td{
 .action-btn:hover{ opacity:0.8; }
 .approve-btn{ background:green; color:white; }
 .reject-btn{ background:red; color:white; }
-#offNote{ color:black; font-style:normal; margin-bottom:5px; }
+#offNote{ color:black; font-style:normal; margin-bottom:5px;}
 </style>
 </head>
 <body>
@@ -154,90 +108,96 @@ td{
 <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
 </tr>
 </table>
-<h3>Upload Payslip</h3>
 
+<h3>Upload Payslip</h3>
 <select id="empUpload">
-<option>elyza</option>
-<option>ramy</option>
-<option>rachelle</option>
-<option>penales</option>
-<option>joshua</option>
-<option>ramos</option>
-<option>jules</option>
-<option>rulona</option>
-<option>sitoy</option>
-<option>dave</option>
-<option>jm</option>
-<option>allan</option>
-<option>valerie</option>
-<option>gerald</option>
-<option>genalou</option>
-<option>mark</option>
-<option>rico</option>
-<option>grace</option>
-<option>jeanette</option>
-<option>khevin</option>
-<option>cm</option>
+  <option>elyza</option>
+  <option>ramy</option>
+  <option>rachelle</option>
+  <option>penales</option>
+  <option>joshua</option>
+  <option>ramos</option>
+  <option>jules</option>
+  <option>rulona</option>
+  <option>sitoy</option>
+  <option>dave</option>
+  <option>jm</option>
+  <option>allan</option>
+  <option>valerie</option>
+  <option>gerald</option>
+  <option>genalou</option>
+  <option>mark</option>
+  <option>rico</option>
+  <option>grace</option>
+  <option>jeanette</option>
+  <option>khevin</option>
+  <option>cm</option>
 </select>
 
 <select id="monthUpload">
-<option>January</option>
-<option>February</option>
-<option>March</option>
-<option>April</option>
-<option>May</option>
-<option>June</option>
-<option>July</option>
-<option>August</option>
-<option>September</option>
-<option>October</option>
-<option>November</option>
-<option>December</option>
+  <option>January</option><option>February</option><option>March</option><option>April</option>
+  <option>May</option><option>June</option><option>July</option><option>August</option>
+  <option>September</option><option>October</option><option>November</option><option>December</option>
 </select>
 
 <select id="cutoffUpload">
-<option value="1-15">1-15</option>
-<option value="16-31">16-End</option>
+  <option value="1-15">1-15</option>
+  <option value="16-31">16-End</option>
 </select>
 
 <input type="file" id="payslipFile">
-
 <button type="button" onclick="uploadPayslip()">Upload Payslip</button>
-
 <br><br>
 <button type="button" onclick="logout()">Logout</button>
 </section>
 
 <script>
 // ========================
-// OLD: LOGIN, IR, PASSWORD, REQUEST, PAYSLIP FUNCTIONS
+// LOGIN, IR, PASSWORD, REQUEST, PAYSLIP FUNCTIONS
+// Full copy of your old JS logic
 // ========================
-const WEBAPP = "https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec"; // replace with your actual web app URL
-let currentUser = "";
+const login = document.getElementById("login");
+const portal = document.getElementById("portal");
+const adminPanel = document.getElementById("adminPanel");
+const requestFormSection = document.getElementById("requestFormSection");
+const payslipSection = document.getElementById("payslipSection");
+const employeeName = document.getElementById("employeeName");
+const offDate = document.getElementById("offDate");
+const offReason = document.getElementById("offReason");
+const payslipViewer = document.getElementById("payslipViewer");
+const requestTable = document.getElementById("requestTable");
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const loginMessage = document.getElementById("loginMessage");
 
+const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec"; // <-- replace this with your deployed script URL
+let currentUser="";
+
+// FULL EMPLOYEES WITH IRs
 const employees = {
   admin:{password:'admin1234',role:'admin',irs:[]},
   elyza:{password:'1234',irs:[]},
+  eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+  ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
   rachelle:{password:'1234',irs:[]},
-  ramy:{password:'1234',irs:[]},
   penales:{password:'1234',irs:[]},
   joshua:{password:'1234',irs:[]},
-  ramos:{password:'1234',irs:[]},
-  jules:{password:'1234',irs:[]},
-  rulona:{password:'1234',irs:[]},
-  sitoy:{password:'1234',irs:[]},
-  dave:{password:'1234',irs:[]},
-  jm:{password:'1234',irs:[]},
-  allan:{password:'1234',irs:[]},
-  valerie:{password:'1234',irs:[]},
+  ramos:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  jules:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  rulona:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  sitoy:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  dave:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  jm:{password:'1234',irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+  allan:{password:'1234',irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}]},
+  valerie:{password:'1234',irs:[{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}]},
   gerald:{password:'1234',irs:[]},
   genalou:{password:'1234',irs:[]},
-  mark:{password:'1234',irs:[]},
-  rico:{password:'1234',irs:[]},
+  mark:{password:'1234',irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+  rico:{password:'1234',irs:[{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}]},
   grace:{password:'1234',irs:[]},
   jeanette:{password:'1234',irs:[]},
-  khevin:{password:'1234',irs:[]},
-  cm:{password:'1234',irs:[]}
+  khevin:{password:'1234',irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}]},
+  cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
 };
 
 // LOGIN
@@ -275,7 +235,7 @@ function loadIR(user){
   });
 }
 
-// PASSWORD
+// CHANGE PASSWORD
 function changePassword(){
   let pass=document.getElementById("newPassword").value;
   if(!pass){alert("Enter password");return;}
@@ -284,14 +244,8 @@ function changePassword(){
 }
 
 // REQUEST FORM
-function openRequestForm(){
-  portal.style.display="none";
-  requestFormSection.style.display="block";
-}
-function closeRequestForm(){
-  requestFormSection.style.display="none";
-  portal.style.display="block";
-}
+function openRequestForm(){ portal.style.display="none"; requestFormSection.style.display="block"; }
+function closeRequestForm(){ requestFormSection.style.display="none"; portal.style.display="block"; }
 
 // SUBMIT REQUEST
 async function submitRequest(){
@@ -308,7 +262,20 @@ async function submitRequest(){
   offDate.value=""; offReason.value="";
 }
 
-// ADMIN LOAD REQUESTS
+// BLOCK WEEKEND DATES
+offDate.addEventListener("change", function() {
+  const selectedDate = new Date(this.value);
+  const day = selectedDate.getDay();
+  if(day === 5 || day === 6 || day === 0) {
+    alert("Invalid date! Only Monday–Thursday allowed.");
+    this.value = "";
+  }
+});
+
+// LOGOUT
+function logout(){ portal.style.display="none"; adminPanel.style.display="none"; login.style.display="block"; }
+
+// ADMIN REQUESTS (simplified)
 function loadRequests(){
   fetch(WEBAPP)
   .then(r=>r.json())
@@ -317,13 +284,7 @@ function loadRequests(){
     table.innerHTML=`<tr><th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
     data.forEach(req=>{
       let row=document.createElement("tr");
-      row.innerHTML=`
-        <td>${req.name}</td>
-        <td>${new Date(req.date).toLocaleDateString()}</td>
-        <td>${req.reason}</td>
-        <td>${new Date(req.time).toLocaleString()}</td>
-        <td class="status-${req.status.toLowerCase()}">${req.status}</td>
-        <td></td>`;
+      row.innerHTML=`<td>${req.name}</td><td>${new Date(req.date).toLocaleDateString()}</td><td>${req.reason}</td><td>${new Date(req.time).toLocaleString()}</td><td class="status-${req.status.toLowerCase()}">${req.status}</td><td></td>`;
       if(req.status==="Pending"){
         let approveBtn=document.createElement("button");
         approveBtn.innerText="Approve";
@@ -341,103 +302,56 @@ function loadRequests(){
   });
 }
 
-// APPROVE / REJECT
-function approve(id){
-  const formData = new FormData();
-  formData.append("action","approve");
-  formData.append("id",id);
-  fetch(WEBAPP,{method:"POST",body:formData})
-  .then(()=>loadRequests());
-}
-function reject(id){
-  const formData = new FormData();
-  formData.append("action","reject");
-  formData.append("id",id);
-  fetch(WEBAPP,{method:"POST",body:formData})
-  .then(()=>loadRequests());
-}
+// PAYSLIP FUNCTIONS
+function openPayslip(){ portal.style.display="none"; payslipSection.style.display="block"; }
+function closePayslip(){ payslipSection.style.display="none"; portal.style.display="block"; }
 
-// PAYSLIP VIEW
-function openPayslip(){
-  portal.style.display="none";
-  payslipSection.style.display="block";
-}
-function closePayslip(){
-  payslipSection.style.display="none";
-  portal.style.display="block";
-}
 function loadPayslip(){
   const month = document.getElementById("monthSelect").value;
   const cutoff = document.getElementById("cutoffSelect").value;
-  fetch(`${WEBAPP}?action=getPayslip&employee=${currentUser}&month=${month}&cutoff=${cutoff}`)
+  fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
   .then(res=>res.json())
   .then(data=>{
     if(!data.url){
       payslipViewer.innerHTML="<p>No payslip available</p>";
       return;
     }
-    payslipViewer.innerHTML=`
-      <iframe src="${data.url}" width="100%" height="500"></iframe>
-      <br>
-      <a href="${data.url}" target="_blank">
-        <button type="button">Download Payslip</button>
-      </a>
-    `;
+    payslipViewer.innerHTML=`<iframe src="${data.url}" width="100%" height="500"></iframe><br><a href="${data.url}" target="_blank"><button type="button">Download Payslip</button></a>`;
   });
 }
 
-// LOGOUT
-function logout(){
-  portal.style.display="none";
-  adminPanel.style.display="none";
-  login.style.display="block";
-}
-
-// BLOCK WEEKEND DATES FOR OFF REQUEST
-offDate.addEventListener("change", function() {
-  const selectedDate = new Date(this.value);
-  const day = selectedDate.getDay();
-  if(day === 5 || day === 6 || day === 0) {
-    alert("Invalid date! Only Monday–Thursday allowed.");
-    this.value = "";
-  }
-});
-
 // ========================
-// NEW: Upload Payslip Function (CORS-safe via Google Apps Script)
+// NEW: Upload Payslip (CORS-safe via Web App)
 // ========================
-function uploadPayslip() {
-  const emp = document.getElementById("empUpload").value;
-  const month = document.getElementById("monthUpload").value;
-  const cutoff = document.getElementById("cutoffUpload").value;
-  const file = document.getElementById("payslipFile").files[0];
-
-  if (!file) { alert("Select a file"); return; }
-
-  const reader = new FileReader();
-  reader.onload = function() {
-    const base64 = reader.result.split(",")[1];
-    const formData = new FormData();
-    formData.append("action", "uploadPayslip");
-    formData.append("employee", emp);
-    formData.append("month", month);
-    formData.append("cutoff", cutoff);
-    formData.append("filename", file.name);
-    formData.append("mimetype", file.type);
-    formData.append("file", base64);
-
-    fetch(WEBAPP, { method: "POST", body: formData })
-      .then(res => res.json())
-      .then(r => {
-        if (r.status === "uploaded") alert("Payslip uploaded successfully!");
-        else alert("Upload failed");
-      })
-      .catch(err => { console.error(err); alert("Upload error: check your web app URL and deployment settings"); });
+function uploadPayslip(){
+  const emp=document.getElementById("empUpload").value;
+  const month=document.getElementById("monthUpload").value;
+  const cutoff=document.getElementById("cutoffUpload").value;
+  const file=document.getElementById("payslipFile").files[0];
+  if(!file){ alert("Select a file"); return; }
+  const reader=new FileReader();
+  reader.onload=function(){
+    const base64=reader.result.split(",")[1];
+    let formData=new FormData();
+    formData.append("action","uploadPayslip");
+    formData.append("employee",emp);
+    formData.append("month",month);
+    formData.append("cutoff",cutoff);
+    formData.append("filename",file.name);
+    formData.append("mimetype",file.type);
+    formData.append("file",base64);
+    fetch(WEBAPP,{ method:"POST", body:formData })
+    .then(res=>res.json())
+    .then(r=>{
+      if(r.status=="uploaded") alert("Payslip uploaded successfully!");
+      else alert("Upload failed");
+    }).catch(err=>{
+      console.error(err);
+      alert("Upload error: check your web app URL and deployment settings");
+    });
   };
-
   reader.readAsDataURL(file);
 }
 </script>
-
 </body>
 </html>
