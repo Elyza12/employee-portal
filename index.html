@@ -154,6 +154,57 @@ td{
 <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
 </tr>
 </table>
+<h3>Upload Payslip</h3>
+
+<select id="empUpload">
+<option>elyza</option>
+<option>ramy</option>
+<option>rachelle</option>
+<option>penales</option>
+<option>joshua</option>
+<option>ramos</option>
+<option>jules</option>
+<option>rulona</option>
+<option>sitoy</option>
+<option>dave</option>
+<option>jm</option>
+<option>allan</option>
+<option>valerie</option>
+<option>gerald</option>
+<option>genalou</option>
+<option>mark</option>
+<option>rico</option>
+<option>grace</option>
+<option>jeanette</option>
+<option>khevin</option>
+<option>cm</option>
+</select>
+
+<select id="monthUpload">
+<option>January</option>
+<option>February</option>
+<option>March</option>
+<option>April</option>
+<option>May</option>
+<option>June</option>
+<option>July</option>
+<option>August</option>
+<option>September</option>
+<option>October</option>
+<option>November</option>
+<option>December</option>
+</select>
+
+<select id="cutoffUpload">
+<option value="1-15">1-15</option>
+<option value="16-31">16-End</option>
+</select>
+
+<input type="file" id="payslipFile">
+
+<button onclick="uploadPayslip()">Upload Payslip</button>
+
+<br><br>
 <button type="button" onclick="logout()">Logout</button>
 </section>
 
@@ -367,8 +418,53 @@ offDate.addEventListener("change", function() {
     this.value = "";
   }
 });
+  function uploadPayslip(){
+
+const emp=document.getElementById("empUpload").value;
+const month=document.getElementById("monthUpload").value;
+const cutoff=document.getElementById("cutoffUpload").value;
+const file=document.getElementById("payslipFile").files[0];
+
+if(!file){
+alert("Select file");
+return;
+}
+
+const reader=new FileReader();
+
+reader.onload=function(){
+
+const base64=reader.result.split(",")[1];
+
+let formData=new FormData();
+
+formData.append("action","uploadPayslip");
+formData.append("employee",emp);
+formData.append("month",month);
+formData.append("cutoff",cutoff);
+formData.append("filename",file.name);
+formData.append("mimetype",file.type);
+formData.append("file",base64);
+
+fetch(WEBAPP,{
+method:"POST",
+body:formData
+})
+.then(r=>r.json())
+.then(()=>{
+alert("Payslip Uploaded");
+});
+
+};
+
+reader.readAsDataURL(file);
+
+}
 </script>
+
+  
 
 </body>
 </html>
+
 
