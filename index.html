@@ -101,73 +101,52 @@ td{
 
 <h3>Change Password</h3>
 <input type="password" id="newPassword" placeholder="New Password">
-<button onclick="changePassword()">Update Password</button>
+<button type="button" onclick="changePassword()">Update Password</button>
 
 <br><br>
-<button onclick="openRequestForm()">Request Day Off</button>
-<button onclick="openPayslip()">View Payslip</button>
-<button onclick="logout()">Logout</button>
+<button type="button" onclick="openRequestForm()">Request Day Off</button>
+<button type="button" onclick="openPayslip()">View Payslip</button>
+<button type="button" onclick="logout()">Logout</button>
 </section>
-
 
 <!-- REQUEST FORM -->
 <section id="requestFormSection">
-  <h2>Request Day Off</h2>
-  <p id="offNote">Select only Monday–Thursday.</p>
-  <input type="date" id="offDate">
-  <textarea id="offReason" placeholder="Reason"></textarea>
-  <button onclick="submitRequest()">Submit</button>
-  <button onclick="closeRequestForm()">Cancel</button>
+<h2>Request Day Off</h2>
+<p id="offNote">Select only Monday–Thursday.</p>
+<input type="date" id="offDate">
+<textarea id="offReason" placeholder="Reason"></textarea>
+<button type="button" onclick="submitRequest()">Submit</button>
+<button type="button" onclick="closeRequestForm()">Cancel</button>
 </section>
-  
+
+<!-- PAYSLIP SECTION -->
 <section id="payslipSection">
-
 <h2>View Payslip</h2>
-
 <select id="monthSelect">
-<option>January</option>
-<option>February</option>
-<option>March</option>
-<option>April</option>
-<option>May</option>
-<option>June</option>
-<option>July</option>
-<option>August</option>
-<option>September</option>
-<option>October</option>
-<option>November</option>
-<option>December</option>
+  <option>January</option>
+  <option>February</option>
+  <option>March</option>
+  <option>April</option>
+  <option>May</option>
+  <option>June</option>
+  <option>July</option>
+  <option>August</option>
+  <option>September</option>
+  <option>October</option>
+  <option>November</option>
+  <option>December</option>
 </select>
-
 <select id="cutoffSelect">
-<option value="1-15">1-15</option>
-<option value="16-31">16-End</option>
+  <option value="1-15">1-15</option>
+  <option value="16-31">16-End</option>
 </select>
-
-<button onclick="loadPayslip()">View Payslip</button>
-
+<button type="button" onclick="loadPayslip()">View Payslip</button>
 <div id="payslipViewer"></div>
-
 <br>
-
-<button onclick="closePayslip()">Back</button>
-
+<button type="button" onclick="closePayslip()">Back</button>
 </section>
-  
-<script>
-// Prevent selecting Friday (5), Saturday (6), Sunday (0)
-document.getElementById("offDate").addEventListener("change", function() {
-  const selectedDate = new Date(this.value);
-  const day = selectedDate.getDay();
-  if(day === 5 || day === 6 || day === 0) {
-    alert("Invalid date! Only Monday–Thursday allowed.");
-    this.value = ""; // clear invalid date
-  }
-});
-</script>
 
 <!-- ADMIN PANEL -->
-  
 <section id="adminPanel">
 <h2>Admin Request Panel</h2>
 <table id="requestTable">
@@ -175,108 +154,53 @@ document.getElementById("offDate").addEventListener("change", function() {
 <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
 </tr>
 </table>
-function loadPayslip(){
-
-const month = document.getElementById("monthSelect").value;
-const cutoff = document.getElementById("cutoffSelect").value;
-
-fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
-
-.then(res=>res.json())
-
-.then(data=>{
-
-if(!data.url){
-
-payslipViewer.innerHTML="<p>No payslip available</p>";
-return;
-
-}
-
-payslipViewer.innerHTML=`
-<iframe src="${data.url}" width="100%" height="500"></iframe>
-<br>
-<a href="${data.url}" target="_blank">
-<button>Download Payslip</button>
-</a>
-`;
-
-});
-
-}
-<button onclick="logout()">Logout</button>
+<button type="button" onclick="logout()">Logout</button>
 </section>
 
 <script>
-function openPayslip(){
+// ELEMENT REFERENCES
+const login = document.getElementById("login");
+const portal = document.getElementById("portal");
+const adminPanel = document.getElementById("adminPanel");
+const requestFormSection = document.getElementById("requestFormSection");
+const payslipSection = document.getElementById("payslipSection");
+const employeeName = document.getElementById("employeeName");
+const offDate = document.getElementById("offDate");
+const offReason = document.getElementById("offReason");
+const payslipViewer = document.getElementById("payslipViewer");
+const requestTable = document.getElementById("requestTable");
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const loginMessage = document.getElementById("loginMessage");
 
-portal.style.display="none";
-payslipSection.style.display="block";
-
-}
-function closePayslip(){
-
-payslipSection.style.display="none";
-portal.style.display="block";
-
-}
-function loadPayslip(){
-
-const month = document.getElementById("monthSelect").value;
-const cutoff = document.getElementById("cutoffSelect").value;
-
-fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
-
-.then(res=>res.json())
-
-.then(data=>{
-
-if(!data.url){
-
-payslipViewer.innerHTML="<p>No payslip available</p>";
-return;
-
-}
-
-payslipViewer.innerHTML=`
-<iframe src="${data.url}" width="100%" height="500"></iframe>
-<br>
-<a href="${data.url}" target="_blank">
-<button>Download Payslip</button>
-</a>
-`;
-
-});
-
-}
 const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 let currentUser="";
 
 /* EMPLOYEES */
 const employees = {
-admin:{password:'admin1234',role:'admin',irs:[]},
-elyza:{password:'1234',irs:[]},
-eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-rachelle:{password:'1234',irs:[]},
-ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
-penales:{password:'1234',irs:[]},
-joshua:{password:'1234',irs:[]},
-ramos:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-jules:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-rulona:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-sitoy:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-dave:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-jm:{password:'1234',irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
-allan:{password:'1234',irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}]},
-valerie:{password:'1234',irs:[{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}]},
-gerald:{password:'1234',irs:[]},
-genalou:{password:'1234',irs:[]},
-mark:{password:'1234',irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
-rico:{password:'1234',irs:[{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}]},
-grace:{password:'1234',irs:[]},
-jeanette:{password:'1234',irs:[]},
-khevin:{password:'1234',irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}]},
-cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
+  admin:{password:'admin1234',role:'admin',irs:[]},
+  elyza:{password:'1234',irs:[]},
+  eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+  rachelle:{password:'1234',irs:[]},
+  ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+  penales:{password:'1234',irs:[]},
+  joshua:{password:'1234',irs:[]},
+  ramos:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  jules:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  rulona:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  sitoy:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  dave:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+  jm:{password:'1234',irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+  allan:{password:'1234',irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}]},
+  valerie:{password:'1234',irs:[{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}]},
+  gerald:{password:'1234',irs:[]},
+  genalou:{password:'1234',irs:[]},
+  mark:{password:'1234',irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+  rico:{password:'1234',irs:[{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}]},
+  grace:{password:'1234',irs:[]},
+  jeanette:{password:'1234',irs:[]},
+  khevin:{password:'1234',irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}]},
+  cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
 };
 
 /* LOGIN */
@@ -350,52 +274,80 @@ async function submitRequest(){
 /* ADMIN LOAD REQUESTS */
 function loadRequests(){
   fetch(WEBAPP)
-    .then(r=>r.json())
-    .then(data=>{
-      const table=requestTable;
-      table.innerHTML=`<tr><th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
-      data.forEach(req=>{
-        let row=document.createElement("tr");
-        row.innerHTML=`
-<td>${req.name}</td>
-<td>${new Date(req.date).toLocaleDateString()}</td>
-<td>${req.reason}</td>
-<td>${new Date(req.time).toLocaleString()}</td>
-<td class="status-${req.status.toLowerCase()}">${req.status}</td>
-<td></td>`;
-        if(req.status==="Pending"){
-          let approveBtn=document.createElement("button");
-          approveBtn.innerText="Approve";
-          approveBtn.className="action-btn approve-btn";
-          approveBtn.onclick=()=>approve(req.row);
-          let rejectBtn=document.createElement("button");
-          rejectBtn.innerText="Reject";
-          rejectBtn.className="action-btn reject-btn";
-          rejectBtn.onclick=()=>reject(req.row);
-          row.children[5].appendChild(approveBtn);
-          row.children[5].appendChild(rejectBtn);
-        }
-        table.appendChild(row);
-      });
+  .then(r=>r.json())
+  .then(data=>{
+    const table=requestTable;
+    table.innerHTML=`<tr><th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
+    data.forEach(req=>{
+      let row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${req.name}</td>
+        <td>${new Date(req.date).toLocaleDateString()}</td>
+        <td>${req.reason}</td>
+        <td>${new Date(req.time).toLocaleString()}</td>
+        <td class="status-${req.status.toLowerCase()}">${req.status}</td>
+        <td></td>`;
+      if(req.status==="Pending"){
+        let approveBtn=document.createElement("button");
+        approveBtn.innerText="Approve";
+        approveBtn.className="action-btn approve-btn";
+        approveBtn.onclick=()=>approve(req.id);
+        let rejectBtn=document.createElement("button");
+        rejectBtn.innerText="Reject";
+        rejectBtn.className="action-btn reject-btn";
+        rejectBtn.onclick=()=>reject(req.id);
+        row.children[5].appendChild(approveBtn);
+        row.children[5].appendChild(rejectBtn);
+      }
+      table.appendChild(row);
     });
+  });
 }
 
 /* APPROVE / REJECT */
-/* APPROVE / REJECT */
-function approve(row){
+function approve(id){
   const formData = new FormData();
   formData.append("action","approve");
-  formData.append("row",row);
+  formData.append("id",id);
   fetch(WEBAPP,{method:"POST",body:formData})
-    .then(()=>loadRequests());
+  .then(()=>loadRequests());
 }
 
-function reject(row){
+function reject(id){
   const formData = new FormData();
   formData.append("action","reject");
-  formData.append("row",row);
+  formData.append("id",id);
   fetch(WEBAPP,{method:"POST",body:formData})
-    .then(()=>loadRequests());
+  .then(()=>loadRequests());
+}
+
+/* PAYSLIP */
+function openPayslip(){
+  portal.style.display="none";
+  payslipSection.style.display="block";
+}
+function closePayslip(){
+  payslipSection.style.display="none";
+  portal.style.display="block";
+}
+function loadPayslip(){
+  const month = document.getElementById("monthSelect").value;
+  const cutoff = document.getElementById("cutoffSelect").value;
+  fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
+  .then(res=>res.json())
+  .then(data=>{
+    if(!data.url){
+      payslipViewer.innerHTML="<p>No payslip available</p>";
+      return;
+    }
+    payslipViewer.innerHTML=`
+      <iframe src="${data.url}" width="100%" height="500"></iframe>
+      <br>
+      <a href="${data.url}" target="_blank">
+        <button type="button">Download Payslip</button>
+      </a>
+    `;
+  });
 }
 
 /* LOGOUT */
@@ -404,13 +356,17 @@ function logout(){
   adminPanel.style.display="none";
   login.style.display="block";
 }
+
+/* BLOCK WEEKEND DATES FOR OFF REQUEST */
+offDate.addEventListener("change", function() {
+  const selectedDate = new Date(this.value);
+  const day = selectedDate.getDay();
+  if(day === 5 || day === 6 || day === 0) {
+    alert("Invalid date! Only Monday–Thursday allowed.");
+    this.value = "";
+  }
+});
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
