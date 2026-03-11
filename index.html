@@ -105,6 +105,7 @@ td{
 
 <br><br>
 <button onclick="openRequestForm()">Request Day Off</button>
+<button onclick="openPayslip()">View Payslip</button>
 <button onclick="logout()">Logout</button>
 </section>
 
@@ -118,7 +119,41 @@ td{
   <button onclick="submitRequest()">Submit</button>
   <button onclick="closeRequestForm()">Cancel</button>
 </section>
+  
+<section id="payslipSection">
 
+<h2>View Payslip</h2>
+
+<select id="monthSelect">
+<option>January</option>
+<option>February</option>
+<option>March</option>
+<option>April</option>
+<option>May</option>
+<option>June</option>
+<option>July</option>
+<option>August</option>
+<option>September</option>
+<option>October</option>
+<option>November</option>
+<option>December</option>
+</select>
+
+<select id="cutoffSelect">
+<option value="1-15">1-15</option>
+<option value="16-31">16-End</option>
+</select>
+
+<button onclick="loadPayslip()">View Payslip</button>
+
+<div id="payslipViewer"></div>
+
+<br>
+
+<button onclick="closePayslip()">Back</button>
+
+</section>
+  
 <script>
 // Prevent selecting Friday (5), Saturday (6), Sunday (0)
 document.getElementById("offDate").addEventListener("change", function() {
@@ -132,6 +167,7 @@ document.getElementById("offDate").addEventListener("change", function() {
 </script>
 
 <!-- ADMIN PANEL -->
+  
 <section id="adminPanel">
 <h2>Admin Request Panel</h2>
 <table id="requestTable">
@@ -139,10 +175,80 @@ document.getElementById("offDate").addEventListener("change", function() {
 <th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
 </tr>
 </table>
+function loadPayslip(){
+
+const month = document.getElementById("monthSelect").value;
+const cutoff = document.getElementById("cutoffSelect").value;
+
+fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(!data.url){
+
+payslipViewer.innerHTML="<p>No payslip available</p>";
+return;
+
+}
+
+payslipViewer.innerHTML=`
+<iframe src="${data.url}" width="100%" height="500"></iframe>
+<br>
+<a href="${data.url}" target="_blank">
+<button>Download Payslip</button>
+</a>
+`;
+
+});
+
+}
 <button onclick="logout()">Logout</button>
 </section>
 
 <script>
+function openPayslip(){
+
+portal.style.display="none";
+payslipSection.style.display="block";
+
+}
+function closePayslip(){
+
+payslipSection.style.display="none";
+portal.style.display="block";
+
+}
+function loadPayslip(){
+
+const month = document.getElementById("monthSelect").value;
+const cutoff = document.getElementById("cutoffSelect").value;
+
+fetch(WEBAPP+"?action=getPayslip&employee="+currentUser+"&month="+month+"&cutoff="+cutoff)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(!data.url){
+
+payslipViewer.innerHTML="<p>No payslip available</p>";
+return;
+
+}
+
+payslipViewer.innerHTML=`
+<iframe src="${data.url}" width="100%" height="500"></iframe>
+<br>
+<a href="${data.url}" target="_blank">
+<button>Download Payslip</button>
+</a>
+`;
+
+});
+
+}
 const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
 let currentUser="";
 
@@ -302,6 +408,7 @@ function logout(){
 
 </body>
 </html>
+
 
 
 
