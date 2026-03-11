@@ -250,35 +250,48 @@ const employees = {
 // ========================
 // NEW: Upload Payslip Function (CORS-safe via Google Apps Script)
 // ========================
-function uploadPayslip(){
-  const emp=document.getElementById("empUpload").value;
-  const month=document.getElementById("monthUpload").value;
-  const cutoff=document.getElementById("cutoffUpload").value;
-  const file=document.getElementById("payslipFile").files[0];
+<script>
+// =========================
+// NEW: Upload Payslip Function (CORS-safe via Google Apps Script)
+// =========================
+function uploadPayslip() {
+  const emp = document.getElementById("empUpload").value;
+  const month = document.getElementById("monthUpload").value;
+  const cutoff = document.getElementById("cutoffUpload").value;
+  const file = document.getElementById("payslipFile").files[0];
 
-  if(!file){ alert("Select a file"); return; }
+  if (!file) {
+    alert("Select a file");
+    return;
+  }
 
-  const reader=new FileReader();
-  reader.onload=function(){
-    const base64=reader.result.split(",")[1];
-    const formData=new FormData();
-    formData.append("action","uploadPayslip");
-    formData.append("employee",emp);
-    formData.append("month",month);
-    formData.append("cutoff",cutoff);
-    formData.append("filename",file.name);
-    formData.append("mimetype",file.type);
-    formData.append("file",base64);
+  const reader = new FileReader();
 
-    fetch(WEBAPP,{
-      method:"POST",
-      body:formData
+  reader.onload = function() {
+    const base64 = reader.result.split(",")[1];
+    const formData = new FormData();
+
+    formData.append("action", "uploadPayslip");
+    formData.append("employee", emp);
+    formData.append("month", month);
+    formData.append("cutoff", cutoff);
+    formData.append("filename", file.name);
+    formData.append("mimetype", file.type);
+    formData.append("file", base64);
+
+    fetch(WEBAPP, {
+      method: "POST",
+      body: formData
     })
-    .then(res=>res.json())
-    .then(r=>{
-      if(r.status=="uploaded") alert("Payslip uploaded successfully!");
-      else alert("Upload failed");
-    }).catch(err=>{
+    .then(res => res.json())
+    .then(r => {
+      if (r.status === "uploaded") {
+        alert("Payslip uploaded successfully!");
+      } else {
+        alert("Upload failed. Check your file or try again.");
+      }
+    })
+    .catch(err => {
       console.error(err);
       alert("Upload error: check your web app URL and deployment settings");
     });
@@ -287,7 +300,9 @@ function uploadPayslip(){
   reader.readAsDataURL(file);
 }
 </script>
+</script>
 
 </body>
 </html>
+
 
