@@ -138,7 +138,7 @@ td{
 </select>
 <select id="cutoffSelect">
   <option value="1-15">1-15</option>
-  <option value="16-31">16-End</option>
+  <option value="16-End">16-End</option>
 </select>
 <button type="button" onclick="loadPayslip()">View Payslip</button>
 <div id="payslipViewer"></div>
@@ -197,7 +197,7 @@ td{
 
 <select id="cutoffUpload">
 <option value="1-15">1-15</option>
-<option value="16-31">16-End</option>
+<option value="16-End">16-End</option>
 </select>
 
 <input type="file" id="payslipFile">
@@ -360,7 +360,7 @@ function loadRequests(){
 function approve(id){
   const formData = new FormData();
   formData.append("action","approve");
-  formData.append("id",id);
+  formData.append("row",id);
   fetch(WEBAPP,{method:"POST",body:formData})
   .then(()=>loadRequests());
 }
@@ -368,11 +368,10 @@ function approve(id){
 function reject(id){
   const formData = new FormData();
   formData.append("action","reject");
-  formData.append("id",id);
+  formData.append("row",id);
   fetch(WEBAPP,{method:"POST",body:formData})
   .then(()=>loadRequests());
 }
-
 /* PAYSLIP */
 function openPayslip(){
   portal.style.display="none";
@@ -418,7 +417,7 @@ offDate.addEventListener("change", function() {
     this.value = "";
   }
 });
-  function uploadPayslip(){
+function uploadPayslip(){
 
 const emp=document.getElementById("empUpload").value;
 const month=document.getElementById("monthUpload").value;
@@ -426,7 +425,7 @@ const cutoff=document.getElementById("cutoffUpload").value;
 const file=document.getElementById("payslipFile").files[0];
 
 if(!file){
-alert("Select file");
+alert("Please select a payslip file");
 return;
 }
 
@@ -450,9 +449,9 @@ fetch(WEBAPP,{
 method:"POST",
 body:formData
 })
-.then(r=>r.json())
-.then(()=>{
-alert("Payslip Uploaded");
+.then(res=>res.json())
+.then(data=>{
+alert("Payslip Uploaded Successfully");
 });
 
 };
@@ -466,5 +465,6 @@ reader.readAsDataURL(file);
 
 </body>
 </html>
+
 
 
