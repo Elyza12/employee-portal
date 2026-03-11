@@ -1,201 +1,304 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Awi Employee Portal</title>
-<style>
-body{ font-family: Arial, sans-serif; background: #1b1b1b; margin: 0;}
-header{ background: #8b0000; color:white; padding:20px; text-align:center; font-size:28px; font-weight:bold;}
-section{ display:none; background:white; margin:30px auto; padding:25px; max-width:900px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.3);}
-#login{ display:block; max-width:400px;}
-input,textarea{ width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; box-sizing:border-box;}
-button{ background:#b22222; color:white; border:none; padding:10px 15px; cursor:pointer; font-weight:bold; border-radius:6px; margin-top:5px;}
-button:hover{ background:#8b0000;}
-table{ width:100%; border-collapse:collapse; margin-top:15px;}
-th{ background:#8b0000; color:white; padding:10px;}
-td{ padding:10px; border-bottom:1px solid #ddd;}
-.status-pending{ color:orange; font-weight:bold; }
-.status-approved{ color:green; font-weight:bold; }
-.status-rejected{ color:red; font-weight:bold; }
-.action-btn{ margin-right:5px; padding:5px 10px; font-size:14px; border-radius:5px; cursor:pointer; }
-.action-btn:hover{ opacity:0.8; }
-.approve-btn{ background:green; color:white; }
-.reject-btn{ background:red; color:white; }
-#offNote{ color:black; font-style:normal; margin-bottom:5px;}
-</style>
-</head>
-<body>
-
-<header>Awi Employee Portal</header>
-
-<!-- LOGIN -->
-<section id="login">
-<h2>Login</h2>
-<form id="loginForm">
-<input id="username" placeholder="First Name" required>
-<input type="password" id="password" placeholder="Password" required>
-<button type="submit">Login</button>
-</form>
-<p id="loginMessage" style="color:red;"></p>
-</section>
-
-<!-- EMPLOYEE PORTAL -->
-<section id="portal">
-<h2>Welcome <span id="employeeName"></span></h2>
-
-<h3>Work Schedule</h3>
-<img src="schedule.png" style="width:100%;border-radius:10px;margin-bottom:20px;">
-
-<h3>Incident Reports</h3>
-<table id="irTable">
-<tr>
-<th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
-</tr>
-</table>
-
-<h3>Change Password</h3>
-<input type="password" id="newPassword" placeholder="New Password">
-<button type="button" onclick="changePassword()">Update Password</button>
-
-<br><br>
-<button type="button" onclick="openRequestForm()">Request Day Off</button>
-<button type="button" onclick="openPayslip()">View Payslip</button>
-<button type="button" onclick="logout()">Logout</button>
-</section>
-
-<!-- REQUEST FORM -->
-<section id="requestFormSection">
-<h2>Request Day Off</h2>
-<p id="offNote">Select only Monday–Thursday.</p>
-<input type="date" id="offDate">
-<textarea id="offReason" placeholder="Reason"></textarea>
-<button type="button" onclick="submitRequest()">Submit</button>
-<button type="button" onclick="closeRequestForm()">Cancel</button>
-</section>
-
-<!-- PAYSLIP SECTION -->
-<section id="payslipSection">
-<h2>View Payslip</h2>
-<select id="monthSelect">
-<option>January</option><option>February</option><option>March</option><option>April</option>
-<option>May</option><option>June</option><option>July</option><option>August</option>
-<option>September</option><option>October</option><option>November</option><option>December</option>
-</select>
-<select id="cutoffSelect">
-<option value="1-15">1-15</option>
-<option value="16-31">16-End</option>
-</select>
-<button type="button" onclick="loadPayslip()">View Payslip</button>
-<div id="payslipViewer"></div>
-<br>
-<button type="button" onclick="closePayslip()">Back</button>
-</section>
-
-<!-- ADMIN PANEL -->
-<section id="adminPanel">
-<h2>Admin Request Panel</h2>
-<table id="requestTable">
-<tr>
-<th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
-</tr>
-</table>
-
-<h3>Upload Payslip</h3>
-<select id="empUpload">
-<option>elyza</option>
-<option>ramy</option>
-<option>rachelle</option>
-<option>penales</option>
-<option>joshua</option>
-<option>ramos</option>
-<option>jules</option>
-<option>rulona</option>
-<option>sitoy</option>
-<option>dave</option>
-<option>jm</option>
-<option>allan</option>
-<option>valerie</option>
-<option>gerald</option>
-<option>genalou</option>
-<option>mark</option>
-<option>rico</option>
-<option>grace</option>
-<option>jeanette</option>
-<option>khevin</option>
-<option>cm</option>
-</select>
-
-<select id="monthUpload">
-<option>January</option><option>February</option><option>March</option><option>April</option>
-<option>May</option><option>June</option><option>July</option><option>August</option>
-<option>September</option><option>October</option><option>November</option><option>December</option>
-</select>
-
-<select id="cutoffUpload">
-<option value="1-15">1-15</option>
-<option value="16-31">16-End</option>
-</select>
-
-<input type="file" id="payslipFile">
-<button type="button" onclick="uploadPayslip()">Upload Payslip</button>
-<br><br>
-<button type="button" onclick="logout()">Logout</button>
-</section>
-
-<script>
-// ========================
-// LOGIN, IR, PASSWORD, REQUEST, PAYSLIP FUNCTIONS
-// All credentials and IRs intact
-// ========================
-const login = document.getElementById("login");
-const portal = document.getElementById("portal");
-const adminPanel = document.getElementById("adminPanel");
-const requestFormSection = document.getElementById("requestFormSection");
-const payslipSection = document.getElementById("payslipSection");
-const employeeName = document.getElementById("employeeName");
-const offDate = document.getElementById("offDate");
-const offReason = document.getElementById("offReason");
-const payslipViewer = document.getElementById("payslipViewer");
-const requestTable = document.getElementById("requestTable");
-const username = document.getElementById("username");
-const password = document.getElementById("password");
-const loginMessage = document.getElementById("loginMessage");
-
-const WEBAPP=""; // <-- your deployed Apps Script Web App URL
-let currentUser="";
-
-// Employees with IRs
-const employees = {
-admin:{password:'admin1234',role:'admin',irs:[]},
-elyza:{password:'1234',irs:[]},
-eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
-ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
-rachelle:{password:'1234',irs:[]},
-penales:{password:'1234',irs:[]},
-joshua:{password:'1234',irs:[]},
-ramos:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-jules:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-rulona:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-sitoy:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-dave:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
-jm:{password:'1234',irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
-allan:{password:'1234',irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}]},
-valerie:{password:'1234',irs:[{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}]},
-gerald:{password:'1234',irs:[]},
-genalou:{password:'1234',irs:[]},
-mark:{password:'1234',irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
-rico:{password:'1234',irs:[{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}]},
-grace:{password:'1234',irs:[]},
-jeanette:{password:'1234',irs:[]},
-khevin:{password:'1234',irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}]},
-cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
-};
-
-// ========================
-// LOGIN, REQUESTS, IR, PAYSLIP JS FUNCTIONS
-// ========================
-// Same as your current code: login, logout, loadIR, changePassword, submitRequest, loadRequests, openPayslip, closePayslip, loadPayslip, uploadPayslip
-// (Everything exactly as your code above, unchanged)
-</script>
-</body>
-</html>
+	<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>Awi Employee Portal</title>
+	<style>
+	body{
+	font-family: Arial, sans-serif;
+	background: #1b1b1b;
+	margin: 0;
+	}
+	header{
+	background: #8b0000;
+	color: white;
+	padding: 20px;
+	text-align: center;
+	font-size: 28px;
+	font-weight: bold;
+	}
+	section{
+	display: none;
+	background: white;
+	margin: 30px auto;
+	padding: 25px;
+	max-width: 900px;
+	border-radius: 12px;
+	box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+	}
+	#login{ display:block; max-width:400px; }
+	input,textarea{
+	width:100%;
+	padding:10px;
+	margin:8px 0;
+	border-radius:6px;
+	border:1px solid #ccc;
+	box-sizing: border-box;
+	}
+	button{
+	background:#b22222;
+	color:white;
+	border:none;
+	padding:10px 15px;
+	cursor:pointer;
+	font-weight:bold;
+	border-radius:6px;
+	margin-top:5px;
+	}
+	button:hover{ background:#8b0000; }
+	table{
+	width:100%;
+	border-collapse:collapse;
+	margin-top:15px;
+	}
+	th{
+	background:#8b0000;
+	color:white;
+	padding:10px;
+	}
+	td{
+	padding:10px;
+	border-bottom:1px solid #ddd;
+	}
+	.status-pending{ color:orange; font-weight:bold; }
+	.status-approved{ color:green; font-weight:bold; }
+	.status-rejected{ color:red; font-weight:bold; }
+	.action-btn{ margin-right:5px; padding:5px 10px; font-size:14px; border-radius:5px; cursor:pointer; }
+	.action-btn:hover{ opacity:0.8; }
+	.approve-btn{ background:green; color:white; }
+	.reject-btn{ background:red; color:white; }
+	#offNote{ color:black; font-style:normal; margin-bottom:5px; }
+	</style>
+	</head>
+	<body>
+	
+	<header>Awi Employee Portal</header>
+	
+	<!-- LOGIN -->
+	<section id="login">
+	<h2>Login</h2>
+	<form id="loginForm">
+	<input id="username" placeholder="First Name" required>
+	<input type="password" id="password" placeholder="Password" required>
+	<button type="submit">Login</button>
+	</form>
+	<p id="loginMessage" style="color:red;"></p>
+	</section>
+	
+	<!-- EMPLOYEE PORTAL -->
+	<section id="portal">
+	<h2>Welcome <span id="employeeName"></span></h2>
+	
+	<h3>Work Schedule</h3>
+	<img src="schedule.png" style="width:100%;border-radius:10px;margin-bottom:20px;">
+	
+	<h3>Incident Reports</h3>
+	<table id="irTable">
+	<tr>
+	<th>Date</th><th>Incident</th><th>Status</th><th>Note</th>
+	</tr>
+	</table>
+	
+	<h3>Change Password</h3>
+	<input type="password" id="newPassword" placeholder="New Password">
+	<button onclick="changePassword()">Update Password</button>
+	
+	<br><br>
+	<button onclick="openRequestForm()">Request Day Off</button>
+	<button onclick="logout()">Logout</button>
+	</section>
+	
+	
+	<!-- REQUEST FORM -->
+	<section id="requestFormSection">
+	<h2>Request Day Off</h2>
+	<p id="offNote">Select only Monday–Thursday.</p>
+	<input type="date" id="offDate">
+	<textarea id="offReason" placeholder="Reason"></textarea>
+	<button onclick="submitRequest()">Submit</button>
+	<button onclick="closeRequestForm()">Cancel</button>
+	</section>
+	
+	<script>
+	// Prevent selecting Friday (5), Saturday (6), Sunday (0)
+	document.getElementById("offDate").addEventListener("change", function() {
+	const selectedDate = new Date(this.value);
+	const day = selectedDate.getDay();
+	if(day === 5 || day === 6 || day === 0) {
+	alert("Invalid date! Only Monday–Thursday allowed.");
+	this.value = ""; // clear invalid date
+	}
+	});
+	</script>
+	
+	<!-- ADMIN PANEL -->
+	<section id="adminPanel">
+	<h2>Admin Request Panel</h2>
+	<table id="requestTable">
+	<tr>
+	<th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th>
+	</tr>
+	</table>
+	<button onclick="logout()">Logout</button>
+	</section>
+	
+	<script>
+	const WEBAPP="https://script.google.com/macros/s/AKfycbxf8gmHrLkVvBLAAfA_ooGiK2HYEooRkKK0f8Kh0t3T2SlhI0R1kjGqZk5a2Qn1G02A/exec";
+	let currentUser="";
+	
+	/* EMPLOYEES */
+	const employees = {
+	admin:{password:'admin1234',role:'admin',irs:[]},
+	elyza:{password:'1234',irs:[]},
+	eliza:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Suspension'}]},
+	rachelle:{password:'1234',irs:[]},
+	ramy:{password:'1234',irs:[{date:'November 16, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning for Suspension'}]},
+	penales:{password:'1234',irs:[]},
+	joshua:{password:'1234',irs:[]},
+	ramos:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+	jules:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+	rulona:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+	sitoy:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+	dave:{password:'1234',irs:[{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning'}]},
+	jm:{password:'1234',irs:[{date:'December 12, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+	allan:{password:'1234',irs:[{date:'January 1, 2026',incident:'Tardiness',status:'IR SERVED',note:'Warning'}]},
+	valerie:{password:'1234',irs:[{date:'November 20, 2025',incident:'AWOL',status:'IR SERVED',note:'Warning'},{date:'January 23, 2026',incident:'Food Violation Policy',status:'IR SERVED',note:'Warning for Termination'}]},
+	gerald:{password:'1234',irs:[]},
+	genalou:{password:'1234',irs:[]},
+	mark:{password:'1234',irs:[{date:'January 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]},
+	rico:{password:'1234',irs:[{date:'January 26, 2026',incident:'Using gadgets while on duty',status:'IR SERVED',note:'Warning'}]},
+	grace:{password:'1234',irs:[]},
+	jeanette:{password:'1234',irs:[]},
+	khevin:{password:'1234',irs:[{date:'November 29, 2025',incident:'Grave Misconduct',status:'IR SERVED',note:'Warning'}]},
+	cm:{password:'1234',irs:[{date:'February 1, 2026',incident:'AWOL',status:'IR SERVED',note:'Warning'}]}
+	};
+	
+	/* LOGIN */
+	document.getElementById("loginForm").addEventListener("submit",function(e){
+	e.preventDefault();
+	let user=username.value.toLowerCase();
+	let pass=password.value;
+	if(employees[user] && employees[user].password===pass){
+	currentUser=user;
+	login.style.display="none";
+	if(employees[user].role==="admin"){
+	adminPanel.style.display="block";
+	loadRequests();
+	setInterval(loadRequests,3000);
+	return;
+	}
+	portal.style.display="block";
+	employeeName.innerText=user;
+	loadIR(user);
+	} else {
+	loginMessage.innerText="Invalid login";
+	}
+	});
+	
+	/* LOAD IR */
+	function loadIR(user){
+	const table=document.getElementById("irTable");
+	table.innerHTML=`<tr><th>Date</th><th>Incident</th><th>Status</th><th>Note</th></tr>`;
+	employees[user].irs.forEach(ir=>{
+	let row=table.insertRow();
+	row.insertCell(0).innerText=ir.date;
+	row.insertCell(1).innerText=ir.incident;
+	row.insertCell(2).innerText=ir.status;
+	row.insertCell(3).innerText=ir.note;
+	});
+	}
+	
+	/* PASSWORD */
+	function changePassword(){
+	let pass=document.getElementById("newPassword").value;
+	if(!pass){alert("Enter password");return;}
+	employees[currentUser].password=pass;
+	alert("Password updated");
+	}
+	
+	/* REQUEST FORM */
+	function openRequestForm(){
+	portal.style.display="none";
+	requestFormSection.style.display="block";
+	}
+	function closeRequestForm(){
+	requestFormSection.style.display="none";
+	portal.style.display="block";
+	}
+	
+	/* SUBMIT REQUEST */
+	async function submitRequest(){
+	let date=offDate.value;
+	let reason=offReason.value;
+	if(!date || !reason){ alert("Complete form"); return; }
+	let formData=new FormData();
+	formData.append("name",currentUser);
+	formData.append("date",date);
+	formData.append("reason",reason);
+	await fetch(WEBAPP,{method:"POST",body:formData});
+	alert("Request sent");
+	closeRequestForm();
+	offDate.value=""; offReason.value="";
+	}
+	
+	/* ADMIN LOAD REQUESTS */
+	function loadRequests(){
+	fetch(WEBAPP)
+	.then(r=>r.json())
+	.then(data=>{
+	const table=requestTable;
+	table.innerHTML=`<tr><th>Employee</th><th>Date</th><th>Reason</th><th>Time Requested</th><th>Status</th><th>Action</th></tr>`;
+	data.forEach(req=>{
+	let row=document.createElement("tr");
+	row.innerHTML=`
+	<td>${req.name}</td>
+	<td>${new Date(req.date).toLocaleDateString()}</td>
+	<td>${req.reason}</td>
+	<td>${new Date(req.time).toLocaleString()}</td>
+	<td class="status-${req.status.toLowerCase()}">${req.status}</td>
+	<td></td>`;
+	if(req.status==="Pending"){
+	let approveBtn=document.createElement("button");
+	approveBtn.innerText="Approve";
+	approveBtn.className="action-btn approve-btn";
+	approveBtn.onclick=()=>approve(req.row);
+	let rejectBtn=document.createElement("button");
+	rejectBtn.innerText="Reject";
+	rejectBtn.className="action-btn reject-btn";
+	rejectBtn.onclick=()=>reject(req.row);
+	row.children[5].appendChild(approveBtn);
+	row.children[5].appendChild(rejectBtn);
+	}
+	table.appendChild(row);
+	});
+	});
+	}
+	
+	/* APPROVE / REJECT */
+	/* APPROVE / REJECT */
+	function approve(row){
+	const formData = new FormData();
+	formData.append("action","approve");
+	formData.append("row",row);
+	fetch(WEBAPP,{method:"POST",body:formData})
+	.then(()=>loadRequests());
+	}
+	
+	function reject(row){
+	const formData = new FormData();
+	formData.append("action","reject");
+	formData.append("row",row);
+	fetch(WEBAPP,{method:"POST",body:formData})
+	.then(()=>loadRequests());
+	}
+	
+	/* LOGOUT */
+	function logout(){
+	portal.style.display="none";
+	adminPanel.style.display="none";
+	login.style.display="block";
+	}
+	</script>
+	
+	</body>
+	</html>
